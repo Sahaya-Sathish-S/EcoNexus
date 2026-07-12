@@ -1,1320 +1,1317 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>EcoNexus — AI-Powered Sustainable Packaging Platform</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* ==========================================================================
-           ECONEXUS SYSTEM TOKENS & CORE VARIABLES
-           ========================================================================== */
-        :root {
-            /* Hardware Palette */
-            --primary: #00FF88;
-            --secondary: #00D9FF;
-            --accent: #7CFFCB;
-            --white: #FFFFFF;
-            --dark-base: #030812;
-            
-            /* Complex Translucent Glass Compositions */
-            --glass-core: rgba(255, 255, 255, 0.03);
-            --glass-surface: rgba(255, 255, 255, 0.05);
-            --glass-elevated: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-glow: rgba(0, 255, 136, 0.25);
-            
-            /* Photonic Vector Glow Profiles */
-            --glow-primary: 0 0 30px rgba(0, 255, 136, 0.35);
-            --glow-secondary: 0 0 30px rgba(0, 217, 255, 0.35);
-            --glow-button: 0 0 25px rgba(0, 255, 136, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            
-            /* Typography Scale Matrix */
-            --ff-orbitron: 'Orbitron', sans-serif;
-            --ff-poppins: 'Poppins', sans-serif;
-            
-            /* Motion Vectors */
-            --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* ==========================================================================
-           SYSTEM RESET & KINETIC ROOT OVERRIDES
-           ========================================================================== */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-            background-color: var(--dark-base);
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: var(--ff-poppins);
-            color: var(--white);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ==========================================================================
-           VISUAL ENGINE LAYERS (BACKGROUND, CANVAS, OVERLAYS)
-           ========================================================================== */
-        .ambient-universe {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url("{{ url_for('static', filename='images/background.png') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -3;
-            transform: scale(1.02);
-            animation: cosmicShift 40s linear infinite alternate;
-            will-change: transform;
-        }
-
-        .dark-matrix-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at 50% 50%, rgba(3, 8, 18, 0.6) 0%, rgba(2, 5, 12, 0.92) 100%);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        .canvas-particle-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Ambient Global Lighting Nodes */
-        .plasma-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.25;
-            pointer-events: none;
-            z-index: -1;
-            will-change: transform;
-        }
-
-        .orb-1 {
-            top: 15%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: var(--primary);
-            animation: floatOrb 22s ease-in-out infinite alternate;
-        }
-
-        .orb-2 {
-            bottom: 10%;
-            right: -5%;
-            width: 600px;
-            height: 600px;
-            background: var(--secondary);
-            animation: floatOrb 28s ease-in-out infinite alternate-reverse;
-        }
-
-        /* ==========================================================================
-           REUSABLE ENTERPRISE UI MODULES & COMPONENTS
-           ========================================================================== */
-        .glass-panel {
-            background: var(--glass-surface);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            transition: all 0.5s var(--ease-premium);
-        }
-
-        .glass-panel:hover {
-            border-color: var(--glass-border-glow);
-            box-shadow: 0 20px 45px rgba(0, 255, 136, 0.08);
-            transform: translateY(-6px);
-        }
-
-        /* Premium Interactive Action Arrays */
-        .btn-neon {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 16px 36px;
-            border-radius: 14px;
-            font-family: var(--ff-orbitron);
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.4s var(--ease-premium);
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-neon-primary {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: var(--dark-base);
-            border: none;
-            box-shadow: var(--glow-button);
-        }
-
-        .btn-neon-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: all 0.6s var(--ease-premium);
-            z-index: -1;
-        }
-
-        .btn-neon-primary:hover::before {
-            left: 100%;
-        }
-
-        .btn-neon-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 0 35px rgba(0, 255, 136, 0.85);
-        }
-
-        .btn-neon-secondary {
-            background: var(--glass-core);
-            color: var(--white);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-neon-secondary:hover {
-            border-color: var(--secondary);
-            color: var(--secondary);
-            background: rgba(0, 217, 255, 0.04);
-            box-shadow: var(--glow-secondary);
-            transform: translateY(-3px);
-        }
-
-        /* Animated Section Headers */
-        .section-header {
-            text-align: center;
-            margin-bottom: 90px;
-            position: relative;
-        }
-
-        .section-tagline {
-            font-family: var(--ff-orbitron);
-            color: var(--secondary);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            display: inline-block;
-            text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
-        }
-
-        .section-title {
-            font-family: var(--ff-orbitron);
-            font-size: 2.8rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, var(--white) 30%, rgba(255, 255, 255, 0.7));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .section-title span {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: var(--glow-primary);
-        }
-
-        /* ==========================================================================
-           NAVIGATION BACKBONE ARCHITECTURE
-           ========================================================================== */
-        .nexus-navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 90px;
-            background: rgba(3, 8, 18, 0.4);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6%;
-            z-index: 1000;
-            transition: all 0.4s var(--ease-premium);
-        }
-
-        .nexus-navbar.scrolled {
-            height: 75px;
-            background: rgba(2, 5, 12, 0.75);
-            border-bottom: 1px solid rgba(0, 255, 136, 0.15);
-        }
-
-        .nav-brand {
-            font-family: var(--ff-orbitron);
-            font-size: 1.8rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: var(--white);
-            text-decoration: none;
-            background: linear-gradient(135deg, var(--white), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            list-style: none;
-        }
-
-        .nav-item a {
-            font-family: var(--ff-orbitron);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
-            text-decoration: none;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            transition: all 0.3s var(--ease-premium);
-            position: relative;
-            padding: 8px 0;
-        }
-
-        .nav-item a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.3s var(--ease-premium);
-        }
-
-        .nav-item a:hover {
-            color: var(--white);
-            text-shadow: var(--glow-primary);
-        }
-
-        .nav-item a:hover::after {
-            width: 100%;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        /* Mobile Layout Controls */
-        .mobile-hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-            z-index: 1100;
-        }
-
-        .mobile-hamburger span {
-            width: 28px;
-            height: 3px;
-            background-color: var(--white);
-            border-radius: 2px;
-            transition: all 0.3s var(--ease-premium);
-        }
-
-        /* ==========================================================================
-           HERO KINETIC APEX INTERFACE
-           ========================================================================== */
-        .hero-apex {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 140px 6% 60px 6%;
-            z-index: 10;
-        }
-
-        .hero-layout-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 40px;
-            align-items: center;
-            width: 100%;
-        }
-
-        .hero-core-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .hero-badge {
-            background: rgba(0, 255, 136, 0.06);
-            border: 1px solid rgba(0, 255, 136, 0.25);
-            padding: 8px 20px;
-            border-radius: 50px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            box-shadow: inset 0 0 12px rgba(0,255,136,0.1);
-        }
-
-        .hero-badge-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary);
-            animation: pulseFlash 1.5s infinite alternate;
-        }
-
-        .hero-badge-text {
-            font-family: var(--ff-orbitron);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-
-        .hero-title {
-            font-family: var(--ff-orbitron);
-            font-size: 5.4rem;
-            font-weight: 900;
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--white) 40%, rgba(255, 255, 255, 0.6));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-family: var(--ff-orbitron);
-            font-size: 2rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 25px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
-        }
-
-        .hero-paragraph {
-            font-size: 1.15rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 680px;
-            margin-bottom: 45px;
-            font-weight: 300;
-        }
-
-        .hero-action-cluster {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* Hero Graphic Element Projection */
-        .hero-projection-box {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .holosphere-core {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: floatOrb 10s ease-in-out infinite alternate;
-        }
-
-        .holosphere-ring {
-            position: absolute;
-            border: 2px dashed rgba(0, 217, 255, 0.2);
-            border-radius: 50%;
-            animation: spinClockwise 25s linear infinite;
-        }
-
-        .hr-1 { width: 100%; height: 100%; }
-        .hr-2 { width: 80%; height: 80%; border-color: rgba(0, 255, 136, 0.25); border-style: dotted; animation-duration: 15s; animation-direction: reverse; }
-        .hr-3 { width: 60%; height: 60%; border-color: rgba(124, 255, 203, 0.3); animation-duration: 8s; }
-
-        .holosphere-icon {
-            font-size: 4.5rem;
-            color: var(--primary);
-            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6));
-            animation: pulseFlash 3s infinite alternate;
-        }
-
-        /* ==========================================================================
-           CORE CAPABILITIES CONTAINER ARCHITECTURE (FEATURES)
-           ========================================================================== */
-        .section-features {
-            padding: 120px 6%;
-            position: relative;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 35px;
-        }
-
-        .feature-card {
-            padding: 45px 35px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-icon-wrapper {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-            transition: all 0.4s var(--ease-premium);
-            color: var(--primary);
-            font-size: 1.8rem;
-        }
-
-        .feature-card:hover .feature-icon-wrapper {
-            background: rgba(0, 255, 136, 0.1);
-            border-color: var(--primary);
-            color: var(--white);
-            box-shadow: var(--glow-primary);
-            transform: scale(1.05);
-        }
-
-        .feature-card-title {
-            font-family: var(--ff-orbitron);
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
-        }
-
-        .feature-spec-list {
-            list-style: none;
-            width: 100%;
-            margin-bottom: 35px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .feature-spec-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.65);
-        }
-
-        .feature-spec-item i {
-            color: var(--secondary);
-            font-size: 0.8rem;
-        }
-
-        .feature-card .btn-neon {
-            width: 100%;
-            margin-top: auto;
-            padding: 12px 24px;
-            font-size: 0.8rem;
-        }
-
-        /* ==========================================================================
-           VALUE MATRICES SECTION (WHY ECONEXUS)
-           ========================================================================== */
-        .section-why {
-            padding: 120px 6%;
-            position: relative;
-        }
-
-        .why-matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-        }
-
-        .why-node-card {
-            padding: 40px 30px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .why-node-icon {
-            font-size: 2.2rem;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, var(--white), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transition: transform 0.4s;
-        }
-
-        .why-node-card:hover .why-node-icon {
-            transform: scale(1.15) rotate(5deg);
-        }
-
-        .why-node-title {
-            font-family: var(--ff-orbitron);
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .why-node-desc {
-            font-size: 0.88rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* ==========================================================================
-           CHRONO WORKFLOW PIPELINE (HOW IT WORKS)
-           ========================================================================== */
-        .section-workflow {
-            padding: 120px 6%;
-            position: relative;
-        }
-
-        .chrono-pipeline {
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-top: 50px;
-        }
-
-        .chrono-vector-line {
-            position: absolute;
-            top: 45px;
-            left: 5%;
-            width: 90%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), rgba(255,255,255,0.05));
-            z-index: 1;
-        }
-
-        .chrono-node {
-            position: relative;
-            z-index: 5;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .chrono-marker {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: rgba(3, 8, 18, 0.9);
-            border: 2px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--ff-orbitron);
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            transition: all 0.4s var(--ease-bounce);
-        }
-
-        .chrono-node:hover .chrono-marker {
-            border-color: var(--primary);
-            box-shadow: var(--glow-primary);
-            color: var(--dark-base);
-            background: var(--primary);
-            transform: scale(1.1);
-        }
-
-        .chrono-panel {
-            padding: 25px 20px;
-            width: 100%;
-            min-height: 160px;
-        }
-
-        .chrono-step-title {
-            font-family: var(--ff-orbitron);
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--white);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .chrono-step-desc {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.55);
-        }
-
-        /* ==========================================================================
-           PHOTONIC CALL TO ACTION APEX (CTA)
-           ========================================================================== */
-        .section-cta {
-            padding: 120px 6%;
-            position: relative;
-        }
-
-        .cta-glowing-vault {
-            position: relative;
-            border-radius: 35px;
-            padding: 90px 40px;
-            text-align: center;
-            overflow: hidden;
-            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
-        }
-
-        .cta-glowing-vault::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 255, 136, 0.12) 0%, transparent 60%);
-            pointer-events: none;
-            animation: floatOrb 15s linear infinite alternate;
-        }
-
-        .cta-header-title {
-            font-family: var(--ff-orbitron);
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, var(--white), rgba(255,255,255,0.7));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .cta-paragraph-desc {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.65);
-            max-width: 600px;
-            margin: 0 auto 45px auto;
-            font-weight: 300;
-        }
-
-        .cta-glowing-vault .btn-neon {
-            padding: 18px 50px;
-            font-size: 1rem;
-        }
-
-        /* ==========================================================================
-           ENTERPRISE DATA SYSTEM FOOTER ARCHITECTURE
-           ========================================================================== */
-        .nexus-footer {
-            background: rgba(2, 5, 12, 0.85);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
-            padding: 80px 6% 40px 6%;
-            position: relative;
-            z-index: 10;
-        }
-
-        .footer-matrix-layout {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 80px;
-            margin-bottom: 60px;
-        }
-
-        .footer-profile-column {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .footer-brand {
-            font-family: var(--ff-orbitron);
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, var(--white), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .footer-tagline-desc {
-            font-size: 0.95rem;
-            color: rgba(255,255,255,0.55);
-            max-width: 400px;
-        }
-
-        .footer-links-column {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 25px;
-        }
-
-        .footer-nav-hub {
-            display: flex;
-            gap: 40px;
-            list-style: none;
-        }
-
-        .footer-nav-hub a {
-            font-family: var(--ff-orbitron);
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
-
-        .footer-nav-hub a:hover {
-            color: var(--primary);
-        }
-
-        .footer-social-vault {
-            display: flex;
-            gap: 20px;
-        }
-
-        .social-token-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: all 0.3s var(--ease-premium);
-        }
-
-        .social-token-link:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(0,255,136,0.05);
-            transform: translateY(-3px);
-        }
-
-        .footer-base-ledger {
-            border-top: 1px solid rgba(255,255,255,0.06);
-            padding-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .signature-line span {
-            color: var(--primary);
-        }
-
-        /* ==========================================================================
-           HARDWARE INTERACTIVE INTERFACE ANIMATION KEYFRAMES
-           ========================================================================== */
-        @keyframes cosmicShift {
-            0% { transform: scale(1.02) translate(0, 0); }
-            100% { transform: scale(1.08) translate(-1%, -1%); }
-        }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(5%, 4%) scale(1.08); }
-            100% { transform: translate(-3%, -2%) scale(0.95); }
-        }
-
-        @keyframes pulseFlash {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes spinClockwise {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes dropFade {
-            0% { opacity: 0; transform: translateY(15px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Reactive Optimization Engine Node Configuration */
-        .reveal-vector-hidden {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s var(--ease-premium), transform 0.8s var(--ease-premium);
-            will-change: transform, opacity;
-        }
-
-        .reveal-vector-active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ==========================================================================
-           CROSS-PLATFORM MEDIA ADAPTATION LAYER (RESPONSIVE)
-           ========================================================================== */
-        @media (max-width: 1200px) {
-            .hero-title { font-size: 4.2rem; }
-            .hero-subtitle { font-size: 1.7rem; }
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .why-matrix-grid { grid-template-columns: repeat(2, 1fr); }
-            .chrono-pipeline { flex-direction: column; gap: 45px; }
-            .chrono-vector-line { display: none; }
-            .chrono-panel { min-height: auto; }
-        }
-
-        @media (max-width: 992px) {
-            .nexus-navbar { padding: 0 4%; }
-            .nav-links { display: none; }
-            .mobile-hamburger { display: flex; }
-            
-            .hero-layout-grid { grid-template-columns: 1fr; text-align: center; }
-            .hero-badge, .hero-core-content { align-self: center; align-items: center; }
-            .hero-action-cluster { justify-content: center; }
-            .hero-projection-box { order: -1; margin-bottom: 40px; }
-            
-            .footer-matrix-layout { grid-template-columns: 1fr; gap: 40px; }
-            .footer-links-column { align-items: flex-start; }
-            
-            /* Dynamic Class Layer For Functional Responsive UI */
-            .nav-links.mobile-active {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 90px;
-                left: 0;
-                width: 100%;
-                background: rgba(3, 8, 18, 0.98);
-                border-bottom: 1px solid var(--glass-border);
-                padding: 40px;
-                gap: 30px;
-                animation: dropFade 0.4s ease forwards;
-            }
-        }
-
-        @media (max-width: 768px) {
-            html { font-size: 14px; }
-            .hero-title { font-size: 3.4rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .section-title { font-size: 2.2rem; }
-            .cta-header-title { font-size: 2.5rem; }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title { font-size: 2.8rem; }
-            .hero-action-cluster .btn-neon { width: 100%; }
-            .why-matrix-grid { grid-template-columns: 1fr; }
-            .footer-nav-hub { flex-direction: column; gap: 15px; }
-            .footer-base-ledger { flex-direction: column; gap: 15px; text-align: center; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="ambient-universe"></div>
-    <div class="dark-matrix-overlay"></div>
-    <div class="plasma-orb orb-1"></div>
-    <div class="plasma-orb orb-2"></div>
-    <canvas class="canvas-particle-layer" id="particleEngineCanvas"></canvas>
-
-    <nav class="nexus-navbar" id="globalNavbar">
-        <a href="#" class="nav-brand">EcoNexus</a>
-        
-        <ul class="nav-links" id="navigationLinksMenu">
-            <li class="nav-item"><a href="#home">Home</a></li>
-            <li class="nav-item"><a href="#features">Features</a></li>
-            <li class="nav-item"><a href="#why-nexus">About</a></li>
-            <li class="nav-item"><a href="#cta-hub">Contact</a></li>
-        </ul>
-
-        <div class="nav-actions">
-            <div class="mobile-hamburger" id="mobileMenuHamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
-
-    <section class="hero-apex" id="home">
-        <div class="hero-layout-grid">
-            <div class="hero-core-content">
-                <div class="hero-badge">
-                    <div class="hero-badge-dot"></div>
-                    <span class="hero-badge-text">v4.0 Live Operational Core</span>
-                </div>
-                <h1 class="hero-title">EcoNexus</h1>
-                <h2 class="hero-subtitle">AI Powered Sustainable Packaging Platform</h2>
-                <p class="hero-paragraph">Transforming eco-friendly manufacturing using Artificial Intelligence, Digital Product Passports and Smart Manufacturing Solutions for MSMEs.</p>
-                
-                <div class="hero-action-cluster">
-                    <a href="#features" class="btn-neon btn-neon-primary">Explore Features <i class="fa-solid fa-arrow-right"></i></a>
-                    <a href="/register" class="btn-neon btn-neon-secondary">Get Started</a>
-                </div>
-            </div>
-
-            <div class="hero-projection-box">
-                <div class="holosphere-core">
-                    <div class="holosphere-ring hr-1"></div>
-                    <div class="holosphere-ring hr-2"></div>
-                    <div class="holosphere-ring hr-3"></div>
-                    <i class="fa-solid fa-microchip-ai holosphere-icon"></i>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-features reveal-vector-hidden" id="features">
-        <div class="section-header">
-            <span class="section-tagline">Deep Tech Solutions</span>
-            <h2 class="section-title">Platform <span>Capabilities</span></h2>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card glass-panel">
-                <div class="feature-icon-wrapper">
-                    <i class="fa-solid fa-qrcode"></i>
-                </div>
-                <h3 class="feature-card-title">QR Code Digital Product Passport</h3>
-                <ul class="feature-spec-list">
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Material Composition Analytics</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Micro Temporal Manufacturing Date</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Cryptographic Batch Serialization</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Mechanical Structural Strength Rating</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Bio-Composting Verification Engine</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Dynamic Carbon Footprint Ledger</li>
-                </ul>
-                <a href="/product" class="btn-neon btn-neon-secondary">Explore Passport</a>
-            </div>
-
-            <div class="feature-card glass-panel">
-                <div class="feature-icon-wrapper">
-                    <i class="fa-solid fa-cube"></i>
-                </div>
-                <h3 class="feature-card-title">AI Custom Packaging Design</h3>
-                <ul class="feature-spec-list">
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Geometric Product Dimensions Processing</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Dynamic Structural Mass Weight Loading</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Fragility Vulnerability Coefficient Matrix</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Structural Topology Optimizations</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Advanced Sustainable Cost Appraisals</li>
-                    <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Micro Thickness Calibration Matrices</li>
-                </ul>
-                <a href="https://econexusai.lovable.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn-neon btn-neon-primary">
-                    Design Packaging
-                    
-                </a>            
-            </div>
-
-    </section>
-
-    <section class="section-why reveal-vector-hidden" id="why-nexus">
-        <div class="section-header">
-            <span class="section-tagline">Strategic Advantage</span>
-            <h2 class="section-title">Why Enterprise Chooses <span>EcoNexus</span></h2>
-        </div>
-
-        <div class="why-matrix-grid">
-            <div class="why-node-card glass-panel">
-                <i class="fa-solid fa-leaf why-node-icon"></i>
-                <h4 class="why-node-title">Eco Friendly</h4>
-                <p class="why-node-desc">100% verified circular economy material selection protocols protecting ecosystem lifecycles.</p>
-            </div>
-            <div class="why-node-card glass-panel">
-                <i class="fa-solid fa-brain why-node-icon"></i>
-                <h4 class="why-node-title">AI Powered</h4>
-                <p class="why-node-desc">Machine Learning architectures optimization layers minimizing development overheads natively.</p>
-            </div>
-            <div class="why-node-card glass-panel">
-                <i class="fa-solid fa-chart-line-up why-node-icon"></i>
-                <h4 class="why-node-title">Cost Effective</h4>
-                <p class="why-node-desc">Algorithmic waste optimization systems lowering manufacturing capital expenditure matrices.</p>
-            </div>
-            <div class="why-node-card glass-panel">
-                <i class="fa-solid fa-seedling why-node-icon"></i>
-                <h4 class="why-node-title">Carbon Tracking</h4>
-                <p class="why-node-desc">Cryptographic distributed balance logs ensuring compliant scope emission certification pathways.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-workflow reveal-vector-hidden">
-        <div class="section-header">
-            <span class="section-tagline">Operational Protocol</span>
-            <h2 class="section-title">Integration <span>Pipeline</span></h2>
-        </div>
-
-        <div class="chrono-pipeline">
-            <div class="chrono-vector-line"></div>
-            
-            <div class="chrono-node">
-                <div class="chrono-marker">01</div>
-                <div class="chrono-panel glass-panel">
-                    <h4 class="chrono-step-title">Register</h4>
-                    <p class="chrono-step-desc">Establish secure corporate cloud operational domains integrated with hardware APIs.</p>
-                </div>
-            </div>
-
-            <div class="chrono-node">
-                <div class="chrono-marker">02</div>
-                <div class="chrono-panel glass-panel">
-                    <h4 class="chrono-step-title">Create Package</h4>
-                    <p class="chrono-step-desc">Ingest industrial parameters, physical mass weight specs, and logistics targets into systems.</p>
-                </div>
-            </div>
-
-            <div class="chrono-node">
-                <div class="chrono-marker">03</div>
-                <div class="chrono-panel glass-panel">
-                    <h4 class="chrono-step-title">AI Analysis</h4>
-                    <p class="chrono-step-desc">Machine Learning networks run structural simulations optimizing topology profiles.</p>
-                </div>
-            </div>
-
-            <div class="chrono-node">
-                <div class="chrono-marker">04</div>
-                <div class="chrono-marker">05</div>
-                <div class="chrono-panel glass-panel">
-                    <h4 class="chrono-step-title">Track Sustainability</h4>
-                    <p class="chrono-step-desc">Monitor live material chain metrics through distribution channels in real-time.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-cta reveal-vector-hidden" id="cta-hub">
-        <div class="cta-glowing-vault">
-            <h2 class="cta-header-title">Ready to Build Sustainable Packaging?</h2>
-            <p class="cta-paragraph-desc">Empower your industrial production pipelines with AI optimization structures. Lower overhead footprints instantly.</p>
-            <a href="/register" class="btn-neon btn-neon-primary">Start Now <i class="fa-solid fa-bolt"></i></a>
-        </div>
-    </section>
-
-    <footer class="nexus-footer">
-        <div class="footer-matrix-layout">
-            <div class="footer-profile-column">
-                <span class="footer-brand">EcoNexus</span>
-                <p class="footer-tagline-desc">AI Powered Sustainable Packaging Platform. Transforming global export compliance systems natively through localized machine learning structures.</p>
-            </div>
-            <div class="footer-links-column">
-                <ul class="footer-nav-hub">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#why-nexus">About</a></li>
-                    <li><a href="#cta-hub">Contact</a></li>
-                </ul>
-                
-            </div>
-        </div>
-        <div class="footer-base-ledger">
-            <p class="copyright-text">&copy; 2026 EcoNexus Global Inc. All rights reserved.</p>
-            <p class="signature-line">Built with <span><i class="fa-solid fa-heart"></i></span> by Sathish</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            
-            /* 1. Global Navigation Scrolled State Modifications */
-            const globalNavbar = document.getElementById("globalNavbar");
-            window.addEventListener("scroll", () => {
-                if (window.scrollY > 50) {
-                    globalNavbar.classList.add("scrolled");
-                } else {
-                    globalNavbar.classList.remove("scrolled");
-                }
-            });
-
-            /* 2. Responsive Mobile Hamburg Link Navigation Controls */
-            const mobileMenuHamburger = document.getElementById("mobileMenuHamburger");
-            const navigationLinksMenu = document.getElementById("navigationLinksMenu");
-
-            mobileMenuHamburger.addEventListener("click", () => {
-                navigationLinksMenu.classList.toggle("mobile-active");
-                // Structural state updates for hamburger vector icons
-                const bars = mobileMenuHamburger.querySelectorAll("span");
-                bars.forEach(bar => bar.style.backgroundColor = navigationLinksMenu.classList.contains("mobile-active") ? "var(--primary)" : "var(--white)");
-            });
-
-            // Auto Close Menus on Nav Node Triggers
-            document.querySelectorAll(".nav-links a").forEach(link => {
-                link.addEventListener("click", () => {
-                    navigationLinksMenu.classList.remove("mobile-active");
-                });
-            });
-
-            /* 3. High-Performance HTML5 Canvas Particulate Fluid Simulation Engine */
-            const particleEngineCanvas = document.getElementById("particleEngineCanvas");
-            const ctx = particleEngineCanvas.getContext("2d");
-            
-            let particleArray = [];
-            const particleCount = 65;
-
-            function matchSystemCanvasViewportDimensions() {
-                particleEngineCanvas.width = window.innerWidth;
-                particleEngineCanvas.height = window.innerHeight;
-            }
-            matchSystemCanvasViewportDimensions();
-            window.addEventListener("resize", matchSystemCanvasViewportDimensions);
-
-            class VectorSystemParticle {
-                constructor() {
-                    this.x = Math.random() * particleEngineCanvas.width;
-                    this.y = Math.random() * particleEngineCanvas.height;
-                    this.radius = Math.random() * 2.5 + 0.5;
-                    this.speedX = Math.random() * 0.4 - 0.2;
-                    this.speedY = Math.random() * -0.6 - 0.1; // Persistent upward vector velocities
-                    this.color = Math.random() > 0.5 ? "rgba(0, 255, 136, 0.3)" : "rgba(0, 217, 255, 0.3)";
-                }
-
-                computeDynamicMovementStep() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-
-                    // Bound Check Re-instantiations
-                    if (this.y < 0) {
-                        this.y = particleEngineCanvas.height;
-                        this.x = Math.random() * particleEngineCanvas.width;
-                    }
-                    if (this.x < 0 || this.x > particleEngineCanvas.width) {
-                        this.speedX = -this.speedX;
-                    }
-                }
-
-                renderPhotonicGraphFrame() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = this.color;
-                    ctx.fill();
-                }
-            }
-
-            function initializeParticleArrayPool() {
-                particleArray = [];
-                for(let i = 0; i < particleCount; i++) {
-                    particleArray.push(new VectorSystemParticle());
-                }
-            }
-            initializeParticleArrayPool();
-
-            function executeCoreParticleRenderLoop() {
-                ctx.clearRect(0, 0, particleEngineCanvas.width, particleEngineCanvas.height);
-                ctx.shadowBlur = 0; 
-                
-                for(let i = 0; i < particleArray.length; i++) {
-                    particleArray[i].computeDynamicMovementStep();
-                    particleArray[i].renderPhotonicGraphFrame();
-                }
-                requestAnimationFrame(executeCoreParticleRenderLoop);
-            }
-            executeCoreParticleRenderLoop();
-
-            /* 4. Accelerated Intersection Observers for Page Section Reveals */
-            const revealVectorTargets = document.querySelectorAll(".reveal-vector-hidden");
-            
-            const layoutObserverOptions = {
-                root: null,
-                threshold: 0.12,
-                margin: "0px"
-            };
-
-            const revealStructuralObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("reveal-vector-active");
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, layoutObserverOptions);
-
-            revealVectorTargets.forEach(target => revealStructuralObserver.observe(target));
-        });
-    </script>
-</body>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">  
+    <title>EcoNexus — AI-Powered Sustainable Packaging Platform</title>  
+    <link rel="preconnect" href="https://fonts.googleapis.com">  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+
+<style>  
+    /* ==========================================================================  
+       ECONEXUS SYSTEM TOKENS & CORE VARIABLES  
+       ========================================================================== */  
+    :root {  
+        /* Hardware Palette */  
+        --primary: #00FF88;  
+        --secondary: #00D9FF;  
+        --accent: #7CFFCB;  
+        --white: #FFFFFF;  
+        --dark-base: #030812;  
+          
+        /* Complex Translucent Glass Compositions */  
+        --glass-core: rgba(255, 255, 255, 0.03);  
+        --glass-surface: rgba(255, 255, 255, 0.05);  
+        --glass-elevated: rgba(255, 255, 255, 0.08);  
+        --glass-border: rgba(255, 255, 255, 0.12);  
+        --glass-border-glow: rgba(0, 255, 136, 0.25);  
+          
+        /* Photonic Vector Glow Profiles */  
+        --glow-primary: 0 0 30px rgba(0, 255, 136, 0.35);  
+        --glow-secondary: 0 0 30px rgba(0, 217, 255, 0.35);  
+        --glow-button: 0 0 25px rgba(0, 255, 136, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);  
+          
+        /* Typography Scale Matrix */  
+        --ff-orbitron: 'Orbitron', sans-serif;  
+        --ff-poppins: 'Poppins', sans-serif;  
+          
+        /* Motion Vectors */  
+        --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);  
+        --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);  
+    }  
+
+    /* ==========================================================================  
+       SYSTEM RESET & KINETIC ROOT OVERRIDES  
+       ========================================================================== */  
+    *, *::before, *::after {  
+        box-sizing: border-box;  
+        margin: 0;  
+        padding: 0;  
+    }  
+
+    html {  
+        scroll-behavior: smooth;  
+        font-size: 16px;  
+        background-color: var(--dark-base);  
+        overflow-x: hidden;  
+    }  
+
+    body {  
+        font-family: var(--ff-poppins);  
+        color: var(--white);  
+        min-height: 100vh;  
+        overflow-x: hidden;  
+        position: relative;  
+        line-height: 1.6;  
+        -webkit-font-smoothing: antialiased;  
+    }  
+
+    /* ==========================================================================  
+       VISUAL ENGINE LAYERS (BACKGROUND, CANVAS, OVERLAYS)  
+       ========================================================================== */  
+    .ambient-universe {  
+        position: fixed;  
+        top: 0;  
+        left: 0;  
+        width: 100vw;  
+        height: 100vh;  
+        background-image: url("{{ url_for('static', filename='images/background.png') }}");  
+        background-size: cover;  
+        background-position: center;  
+        background-repeat: no-repeat;  
+        z-index: -3;  
+        transform: scale(1.02);  
+        animation: cosmicShift 40s linear infinite alternate;  
+        will-change: transform;  
+    }  
+
+    .dark-matrix-overlay {  
+        position: fixed;  
+        top: 0;  
+        left: 0;  
+        width: 100vw;  
+        height: 100vh;  
+        background: radial-gradient(circle at 50% 50%, rgba(3, 8, 18, 0.6) 0%, rgba(2, 5, 12, 0.92) 100%);  
+        z-index: -2;  
+        pointer-events: none;  
+    }  
+
+    .canvas-particle-layer {  
+        position: fixed;  
+        top: 0;  
+        left: 0;  
+        width: 100vw;  
+        height: 100vh;  
+        z-index: -1;  
+        pointer-events: none;  
+    }  
+
+    /* Ambient Global Lighting Nodes */  
+    .plasma-orb {  
+        position: absolute;  
+        border-radius: 50%;  
+        filter: blur(140px);  
+        opacity: 0.25;  
+        pointer-events: none;  
+        z-index: -1;  
+        will-change: transform;  
+    }  
+
+    .orb-1 {  
+        top: 15%;  
+        left: -10%;  
+        width: 500px;  
+        height: 500px;  
+        background: var(--primary);  
+        animation: floatOrb 22s ease-in-out infinite alternate;  
+    }  
+
+    .orb-2 {  
+        bottom: 10%;  
+        right: -5%;  
+        width: 600px;  
+        height: 600px;  
+        background: var(--secondary);  
+        animation: floatOrb 28s ease-in-out infinite alternate-reverse;  
+    }  
+
+    /* ==========================================================================  
+       REUSABLE ENTERPRISE UI MODULES & COMPONENTS  
+       ========================================================================== */  
+    .glass-panel {  
+        background: var(--glass-surface);  
+        backdrop-filter: blur(20px);  
+        -webkit-backdrop-filter: blur(20px);  
+        border: 1px solid var(--glass-border);  
+        border-radius: 24px;  
+        transition: all 0.5s var(--ease-premium);  
+    }  
+
+    .glass-panel:hover {  
+        border-color: var(--glass-border-glow);  
+        box-shadow: 0 20px 45px rgba(0, 255, 136, 0.08);  
+        transform: translateY(-6px);  
+    }  
+
+    /* Premium Interactive Action Arrays */  
+    .btn-neon {  
+        position: relative;  
+        display: inline-flex;  
+        align-items: center;  
+        justify-content: center;  
+        gap: 10px;  
+        padding: 16px 36px;  
+        border-radius: 14px;  
+        font-family: var(--ff-orbitron);  
+        font-size: 0.9rem;  
+        font-weight: 700;  
+        text-transform: uppercase;  
+        letter-spacing: 2px;  
+        text-decoration: none;  
+        cursor: pointer;  
+        transition: all 0.4s var(--ease-premium);  
+        overflow: hidden;  
+        z-index: 1;  
+    }  
+
+    .btn-neon-primary {  
+        background: linear-gradient(90deg, var(--primary), var(--secondary));  
+        color: var(--dark-base);  
+        border: none;  
+        box-shadow: var(--glow-button);  
+    }  
+
+    .btn-neon-primary::before {  
+        content: '';  
+        position: absolute;  
+        top: 0;  
+        left: -100%;  
+        width: 100%;  
+        height: 100%;  
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);  
+        transition: all 0.6s var(--ease-premium);  
+        z-index: -1;  
+    }  
+
+    .btn-neon-primary:hover::before {  
+        left: 100%;  
+    }  
+
+    .btn-neon-primary:hover {  
+        transform: translateY(-3px) scale(1.02);  
+        box-shadow: 0 0 35px rgba(0, 255, 136, 0.85);  
+    }  
+
+    .btn-neon-secondary {  
+        background: var(--glass-core);  
+        color: var(--white);  
+        border: 1px solid var(--glass-border);  
+        backdrop-filter: blur(10px);  
+    }  
+
+    .btn-neon-secondary:hover {  
+        border-color: var(--secondary);  
+        color: var(--secondary);  
+        background: rgba(0, 217, 255, 0.04);  
+        box-shadow: var(--glow-secondary);  
+        transform: translateY(-3px);  
+    }  
+
+    /* Animated Section Headers */  
+    .section-header {  
+        text-align: center;  
+        margin-bottom: 90px;  
+        position: relative;  
+    }  
+
+    .section-tagline {  
+        font-family: var(--ff-orbitron);  
+        color: var(--secondary);  
+        font-size: 0.85rem;  
+        font-weight: 700;  
+        letter-spacing: 5px;  
+        text-transform: uppercase;  
+        margin-bottom: 15px;  
+        display: inline-block;  
+        text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);  
+    }  
+
+    .section-title {  
+        font-family: var(--ff-orbitron);  
+        font-size: 2.8rem;  
+        font-weight: 900;  
+        letter-spacing: -1px;  
+        background: linear-gradient(135deg, var(--white) 30%, rgba(255, 255, 255, 0.7));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+    }  
+
+    .section-title span {  
+        background: linear-gradient(135deg, var(--primary), var(--secondary));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+        text-shadow: var(--glow-primary);  
+    }  
+
+    /* ==========================================================================  
+       NAVIGATION BACKBONE ARCHITECTURE  
+       ========================================================================== */  
+    .nexus-navbar {  
+        position: fixed;  
+        top: 0;  
+        left: 0;  
+        width: 100%;  
+        height: 90px;  
+        background: rgba(3, 8, 18, 0.4);  
+        backdrop-filter: blur(25px);  
+        -webkit-backdrop-filter: blur(25px);  
+        border-bottom: 1px solid var(--glass-border);  
+        display: flex;  
+        align-items: center;  
+        justify-content: space-between;  
+        padding: 0 6%;  
+        z-index: 1000;  
+        transition: all 0.4s var(--ease-premium);  
+    }  
+
+    .nexus-navbar.scrolled {  
+        height: 75px;  
+        background: rgba(2, 5, 12, 0.75);  
+        border-bottom: 1px solid rgba(0, 255, 136, 0.15);  
+    }  
+
+    .nav-brand {  
+        font-family: var(--ff-orbitron);  
+        font-size: 1.8rem;  
+        font-weight: 900;  
+        letter-spacing: 2px;  
+        color: var(--white);  
+        text-decoration: none;  
+        background: linear-gradient(135deg, var(--white), var(--primary));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+        text-shadow: 0 0 20px rgba(0, 255, 136, 0.2);  
+    }  
+
+    .nav-links {  
+        display: flex;  
+        align-items: center;  
+        gap: 40px;  
+        list-style: none;  
+    }  
+
+    .nav-item a {  
+        font-family: var(--ff-orbitron);  
+        font-size: 0.85rem;  
+        font-weight: 600;  
+        color: rgba(255, 255, 255, 0.75);  
+        text-decoration: none;  
+        letter-spacing: 1.5px;  
+        text-transform: uppercase;  
+        transition: all 0.3s var(--ease-premium);  
+        position: relative;  
+        padding: 8px 0;  
+    }  
+
+    .nav-item a::after {  
+        content: '';  
+        position: absolute;  
+        bottom: 0;  
+        left: 0;  
+        width: 0;  
+        height: 2px;  
+        background: linear-gradient(90deg, var(--primary), var(--secondary));  
+        transition: width 0.3s var(--ease-premium);  
+    }  
+
+    .nav-item a:hover {  
+        color: var(--white);  
+        text-shadow: var(--glow-primary);  
+    }  
+
+    .nav-item a:hover::after {  
+        width: 100%;  
+    }  
+
+    .nav-actions {  
+        display: flex;  
+        align-items: center;  
+        gap: 25px;  
+    }  
+
+    /* Mobile Layout Controls */  
+    .mobile-hamburger {  
+        display: none;  
+        flex-direction: column;  
+        gap: 6px;  
+        cursor: pointer;  
+        z-index: 1100;  
+    }  
+
+    .mobile-hamburger span {  
+        width: 28px;  
+        height: 3px;  
+        background-color: var(--white);  
+        border-radius: 2px;  
+        transition: all 0.3s var(--ease-premium);  
+    }  
+
+    /* ==========================================================================  
+       HERO KINETIC APEX INTERFACE  
+       ========================================================================== */  
+    .hero-apex {  
+        position: relative;  
+        min-height: 100vh;  
+        display: flex;  
+        align-items: center;  
+        padding: 140px 6% 60px 6%;  
+        z-index: 10;  
+    }  
+
+    .hero-layout-grid {  
+        display: grid;  
+        grid-template-columns: 1.2fr 0.8fr;  
+        gap: 40px;  
+        align-items: center;  
+        width: 100%;  
+    }  
+
+    .hero-core-content {  
+        display: flex;  
+        flex-direction: column;  
+        align-items: flex-start;  
+    }  
+
+    .hero-badge {  
+        background: rgba(0, 255, 136, 0.06);  
+        border: 1px solid rgba(0, 255, 136, 0.25);  
+        padding: 8px 20px;  
+        border-radius: 50px;  
+        display: inline-flex;  
+        align-items: center;  
+        gap: 10px;  
+        margin-bottom: 25px;  
+        box-shadow: inset 0 0 12px rgba(0,255,136,0.1);  
+    }  
+
+    .hero-badge-dot {  
+        width: 8px;  
+        height: 8px;  
+        background-color: var(--primary);  
+        border-radius: 50%;  
+        box-shadow: 0 0 10px var(--primary);  
+        animation: pulseFlash 1.5s infinite alternate;  
+    }  
+
+    .hero-badge-text {  
+        font-family: var(--ff-orbitron);  
+        font-size: 0.75rem;  
+        font-weight: 700;  
+        letter-spacing: 2px;  
+        color: var(--primary);  
+        text-transform: uppercase;  
+    }  
+
+    .hero-title {  
+        font-family: var(--ff-orbitron);  
+        font-size: 5.4rem;  
+        font-weight: 900;  
+        line-height: 1.05;  
+        letter-spacing: -2px;  
+        margin-bottom: 10px;  
+        background: linear-gradient(135deg, var(--white) 40%, rgba(255, 255, 255, 0.6));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+    }  
+
+    .hero-subtitle {  
+        font-family: var(--ff-orbitron);  
+        font-size: 2rem;  
+        font-weight: 700;  
+        line-height: 1.2;  
+        margin-bottom: 25px;  
+        background: linear-gradient(90deg, var(--primary), var(--secondary));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+        text-shadow: 0 0 30px rgba(0, 255, 136, 0.15);  
+    }  
+
+    .hero-paragraph {  
+        font-size: 1.15rem;  
+        color: rgba(255, 255, 255, 0.7);  
+        max-width: 680px;  
+        margin-bottom: 45px;  
+        font-weight: 300;  
+    }  
+
+    .hero-action-cluster {  
+        display: flex;  
+        gap: 20px;  
+        margin-bottom: 20px;  
+        flex-wrap: wrap;  
+    }  
+
+    /* Hero Graphic Element Projection */  
+    .hero-projection-box {  
+        position: relative;  
+        display: flex;  
+        justify-content: center;  
+        align-items: center;  
+    }  
+
+    .holosphere-core {  
+        position: relative;  
+        width: 320px;  
+        height: 320px;  
+        background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, transparent 70%);  
+        border-radius: 50%;  
+        display: flex;  
+        justify-content: center;  
+        align-items: center;  
+        animation: floatOrb 10s ease-in-out infinite alternate;  
+    }  
+
+    .holosphere-ring {  
+        position: absolute;  
+        border: 2px dashed rgba(0, 217, 255, 0.2);  
+        border-radius: 50%;  
+        animation: spinClockwise 25s linear infinite;  
+    }  
+
+    .hr-1 { width: 100%; height: 100%; }  
+    .hr-2 { width: 80%; height: 80%; border-color: rgba(0, 255, 136, 0.25); border-style: dotted; animation-duration: 15s; animation-direction: reverse; }  
+    .hr-3 { width: 60%; height: 60%; border-color: rgba(124, 255, 203, 0.3); animation-duration: 8s; }  
+
+    .holosphere-icon {  
+        font-size: 4.5rem;  
+        color: var(--primary);  
+        filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6));  
+        animation: pulseFlash 3s infinite alternate;  
+    }  
+
+    /* ==========================================================================  
+       CORE CAPABILITIES CONTAINER ARCHITECTURE (FEATURES)  
+       ========================================================================== */  
+    .section-features {  
+        padding: 120px 6%;  
+        position: relative;  
+    }  
+
+    .features-grid {  
+        display: grid;  
+        grid-template-columns: repeat(2, 1fr);  
+        gap: 35px;  
+    }  
+
+    .feature-card {  
+        padding: 45px 35px;  
+        display: flex;  
+        flex-direction: column;  
+        align-items: flex-start;  
+        position: relative;  
+        overflow: hidden;  
+    }  
+
+    .feature-card::before {  
+        content: '';  
+        position: absolute;  
+        top: 0;  
+        left: 0;  
+        width: 100%;  
+        height: 4px;  
+        background: linear-gradient(90deg, var(--primary), var(--secondary));  
+        opacity: 0;  
+        transition: opacity 0.3s;  
+    }  
+
+    .feature-card:hover::before {  
+        opacity: 1;  
+    }  
+
+    .feature-icon-wrapper {  
+        width: 70px;  
+        height: 70px;  
+        border-radius: 16px;  
+        background: rgba(255,255,255,0.03);  
+        border: 1px solid rgba(255,255,255,0.1);  
+        display: flex;  
+        align-items: center;  
+        justify-content: center;  
+        margin-bottom: 30px;  
+        transition: all 0.4s var(--ease-premium);  
+        color: var(--primary);  
+        font-size: 1.8rem;  
+    }  
+
+    .feature-card:hover .feature-icon-wrapper {  
+        background: rgba(0, 255, 136, 0.1);  
+        border-color: var(--primary);  
+        color: var(--white);  
+        box-shadow: var(--glow-primary);  
+        transform: scale(1.05);  
+    }  
+
+    .feature-card-title {  
+        font-family: var(--ff-orbitron);  
+        font-size: 1.35rem;  
+        font-weight: 700;  
+        margin-bottom: 18px;  
+        letter-spacing: 0.5px;  
+    }  
+
+    .feature-spec-list {  
+        list-style: none;  
+        width: 100%;  
+        margin-bottom: 35px;  
+        display: flex;  
+        flex-direction: column;  
+        gap: 10px;  
+    }  
+
+    .feature-spec-item {  
+        display: flex;  
+        align-items: center;  
+        gap: 12px;  
+        font-size: 0.9rem;  
+        color: rgba(255, 255, 255, 0.65);  
+    }  
+
+    .feature-spec-item i {  
+        color: var(--secondary);  
+        font-size: 0.8rem;  
+    }  
+
+    .feature-card .btn-neon {  
+        width: 100%;  
+        margin-top: auto;  
+        padding: 12px 24px;  
+        font-size: 0.8rem;  
+    }  
+
+    /* ==========================================================================  
+       VALUE MATRICES SECTION (WHY ECONEXUS)  
+       ========================================================================== */  
+    .section-why {  
+        padding: 120px 6%;  
+        position: relative;  
+    }  
+
+    .why-matrix-grid {  
+        display: grid;  
+        grid-template-columns: repeat(4, 1fr);  
+        gap: 25px;  
+    }  
+
+    .why-node-card {  
+        padding: 40px 30px;  
+        text-align: center;  
+        display: flex;  
+        flex-direction: column;  
+        align-items: center;  
+    }  
+
+    .why-node-icon {  
+        font-size: 2.2rem;  
+        margin-bottom: 25px;  
+        background: linear-gradient(135deg, var(--white), var(--secondary));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+        transition: transform 0.4s;  
+    }  
+
+    .why-node-card:hover .why-node-icon {  
+        transform: scale(1.15) rotate(5deg);  
+    }  
+
+    .why-node-title {  
+        font-family: var(--ff-orbitron);  
+        font-size: 1.2rem;  
+        font-weight: 700;  
+        margin-bottom: 12px;  
+        letter-spacing: 0.5px;  
+    }  
+
+    .why-node-desc {  
+        font-size: 0.88rem;  
+        color: rgba(255, 255, 255, 0.6);  
+    }  
+
+    /* ==========================================================================  
+       CHRONO WORKFLOW PIPELINE (HOW IT WORKS)  
+       ========================================================================== */  
+    .section-workflow {  
+        padding: 120px 6%;  
+        position: relative;  
+    }  
+
+    .chrono-pipeline {  
+        position: relative;  
+        display: flex;  
+        justify-content: space-between;  
+        align-items: flex-start;  
+        gap: 20px;  
+        margin-top: 50px;  
+    }  
+
+    .chrono-vector-line {  
+        position: absolute;  
+        top: 45px;  
+        left: 5%;  
+        width: 90%;  
+        height: 2px;  
+        background: linear-gradient(90deg, var(--primary), var(--secondary), rgba(255,255,255,0.05));  
+        z-index: 1;  
+    }  
+
+    .chrono-node {  
+        position: relative;  
+        z-index: 5;  
+        flex: 1;  
+        display: flex;  
+        flex-direction: column;  
+        align-items: center;  
+        text-align: center;  
+    }  
+
+    .chrono-marker {  
+        width: 90px;  
+        height: 90px;  
+        border-radius: 50%;  
+        background: rgba(3, 8, 18, 0.9);  
+        border: 2px solid var(--glass-border);  
+        display: flex;  
+        align-items: center;  
+        justify-content: center;  
+        font-family: var(--ff-orbitron);  
+        font-size: 1.5rem;  
+        font-weight: 800;  
+        color: var(--primary);  
+        margin-bottom: 25px;  
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);  
+        transition: all 0.4s var(--ease-bounce);  
+    }  
+
+    .chrono-node:hover .chrono-marker {  
+        border-color: var(--primary);  
+        box-shadow: var(--glow-primary);  
+        color: var(--dark-base);  
+        background: var(--primary);  
+        transform: scale(1.1);  
+    }  
+
+    .chrono-panel {  
+        padding: 25px 20px;  
+        width: 100%;  
+        min-height: 160px;  
+    }  
+
+    .chrono-step-title {  
+        font-family: var(--ff-orbitron);  
+        font-size: 1.05rem;  
+        font-weight: 700;  
+        color: var(--white);  
+        margin-bottom: 10px;  
+        text-transform: uppercase;  
+        letter-spacing: 1px;  
+    }  
+
+    .chrono-step-desc {  
+        font-size: 0.85rem;  
+        color: rgba(255,255,255,0.55);  
+    }  
+
+    /* ==========================================================================  
+       PHOTONIC CALL TO ACTION APEX (CTA)  
+       ========================================================================== */  
+    .section-cta {  
+        padding: 120px 6%;  
+        position: relative;  
+    }  
+
+    .cta-glowing-vault {  
+        position: relative;  
+        border-radius: 35px;  
+        padding: 90px 40px;  
+        text-align: center;  
+        overflow: hidden;  
+        background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%);  
+        border: 1px solid var(--glass-border);  
+        box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);  
+    }  
+
+    .cta-glowing-vault::before {  
+        content: '';  
+        position: absolute;  
+        top: -50%;  
+        left: -50%;  
+        width: 200%;  
+        height: 200%;  
+        background: radial-gradient(circle, rgba(0, 255, 136, 0.12) 0%, transparent 60%);  
+        pointer-events: none;  
+        animation: floatOrb 15s linear infinite alternate;  
+    }  
+
+    .cta-header-title {  
+        font-family: var(--ff-orbitron);  
+        font-size: 3.5rem;  
+        font-weight: 900;  
+        letter-spacing: -1px;  
+        margin-bottom: 25px;  
+        background: linear-gradient(135deg, var(--white), rgba(255,255,255,0.7));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+    }  
+
+    .cta-paragraph-desc {  
+        font-size: 1.1rem;  
+        color: rgba(255,255,255,0.65);  
+        max-width: 600px;  
+        margin: 0 auto 45px auto;  
+        font-weight: 300;  
+    }  
+
+    .cta-glowing-vault .btn-neon {  
+        padding: 18px 50px;  
+        font-size: 1rem;  
+    }  
+
+    /* ==========================================================================  
+       ENTERPRISE DATA SYSTEM FOOTER ARCHITECTURE  
+       ========================================================================== */  
+    .nexus-footer {  
+        background: rgba(2, 5, 12, 0.85);  
+        backdrop-filter: blur(20px);  
+        border-top: 1px solid var(--glass-border);  
+        padding: 80px 6% 40px 6%;  
+        position: relative;  
+        z-index: 10;  
+    }  
+
+    .footer-matrix-layout {  
+        display: grid;  
+        grid-template-columns: 1.5fr 1fr;  
+        gap: 80px;  
+        margin-bottom: 60px;  
+    }  
+
+    .footer-profile-column {  
+        display: flex;  
+        flex-direction: column;  
+        align-items: flex-start;  
+        gap: 20px;  
+    }  
+
+    .footer-brand {  
+        font-family: var(--ff-orbitron);  
+        font-size: 2rem;  
+        font-weight: 900;  
+        letter-spacing: 2px;  
+        background: linear-gradient(135deg, var(--white), var(--primary));  
+        -webkit-background-clip: text;  
+        -webkit-text-fill-color: transparent;  
+    }  
+
+    .footer-tagline-desc {  
+        font-size: 0.95rem;  
+        color: rgba(255,255,255,0.55);  
+        max-width: 400px;  
+    }  
+
+    .footer-links-column {  
+        display: flex;  
+        flex-direction: column;  
+        align-items: flex-end;  
+        gap: 25px;  
+    }  
+
+    .footer-nav-hub {  
+        display: flex;  
+        gap: 40px;  
+        list-style: none;  
+    }  
+
+    .footer-nav-hub a {  
+        font-family: var(--ff-orbitron);  
+        font-size: 0.85rem;  
+        color: rgba(255,255,255,0.6);  
+        text-decoration: none;  
+        letter-spacing: 1px;  
+        text-transform: uppercase;  
+        transition: color 0.3s;  
+    }  
+
+    .footer-nav-hub a:hover {  
+        color: var(--primary);  
+    }  
+
+    .footer-social-vault {  
+        display: flex;  
+        gap: 20px;  
+    }  
+
+    .social-token-link {  
+        width: 40px;  
+        height: 40px;  
+        border-radius: 50%;  
+        background: rgba(255,255,255,0.03);  
+        border: 1px solid var(--glass-border);  
+        display: flex;  
+        align-items: center;  
+        justify-content: center;  
+        color: rgba(255,255,255,0.6);  
+        text-decoration: none;  
+        transition: all 0.3s var(--ease-premium);  
+    }  
+
+    .social-token-link:hover {  
+        border-color: var(--primary);  
+        color: var(--primary);  
+        background: rgba(0,255,136,0.05);  
+        transform: translateY(-3px);  
+    }  
+
+    .footer-base-ledger {  
+        border-top: 1px solid rgba(255,255,255,0.06);  
+        padding-top: 30px;  
+        display: flex;  
+        justify-content: space-between;  
+        align-items: center;  
+        font-size: 0.8rem;  
+        color: rgba(255,255,255,0.4);  
+    }  
+
+    .signature-line span {  
+        color: var(--primary);  
+    }  
+
+    /* ==========================================================================  
+       HARDWARE INTERACTIVE INTERFACE ANIMATION KEYFRAMES  
+       ========================================================================== */  
+    @keyframes cosmicShift {  
+        0% { transform: scale(1.02) translate(0, 0); }  
+        100% { transform: scale(1.08) translate(-1%, -1%); }  
+    }  
+
+    @keyframes floatOrb {  
+        0% { transform: translate(0, 0) scale(1); }  
+        50% { transform: translate(5%, 4%) scale(1.08); }  
+        100% { transform: translate(-3%, -2%) scale(0.95); }  
+    }  
+
+    @keyframes pulseFlash {  
+        0% { opacity: 0.5; }  
+        100% { opacity: 1; }  
+    }  
+
+    @keyframes spinClockwise {  
+        0% { transform: rotate(0deg); }  
+        100% { transform: rotate(360deg); }  
+    }  
+
+    @keyframes dropFade {  
+        0% { opacity: 0; transform: translateY(15px); }  
+        100% { opacity: 1; transform: translateY(0); }  
+    }  
+
+    /* Reactive Optimization Engine Node Configuration */  
+    .reveal-vector-hidden {  
+        opacity: 0;  
+        transform: translateY(40px);  
+        transition: opacity 0.8s var(--ease-premium), transform 0.8s var(--ease-premium);  
+        will-change: transform, opacity;  
+    }  
+
+    .reveal-vector-active {  
+        opacity: 1;  
+        transform: translateY(0);  
+    }  
+
+    /* ==========================================================================  
+       CROSS-PLATFORM MEDIA ADAPTATION LAYER (RESPONSIVE)  
+       ========================================================================== */  
+    @media (max-width: 1200px) {  
+        .hero-title { font-size: 4.2rem; }  
+        .hero-subtitle { font-size: 1.7rem; }  
+        .features-grid { grid-template-columns: repeat(2, 1fr); }  
+        .why-matrix-grid { grid-template-columns: repeat(2, 1fr); }  
+        .chrono-pipeline { flex-direction: column; gap: 45px; }  
+        .chrono-vector-line { display: none; }  
+        .chrono-panel { min-height: auto; }  
+    }  
+
+    @media (max-width: 992px) {  
+        .nexus-navbar { padding: 0 4%; }  
+        .nav-links { display: none; }  
+        .mobile-hamburger { display: flex; }  
+          
+        .hero-layout-grid { grid-template-columns: 1fr; text-align: center; }  
+        .hero-badge, .hero-core-content { align-self: center; align-items: center; }  
+        .hero-action-cluster { justify-content: center; }  
+        .hero-projection-box { order: -1; margin-bottom: 40px; }  
+          
+        .footer-matrix-layout { grid-template-columns: 1fr; gap: 40px; }  
+        .footer-links-column { align-items: flex-start; }  
+          
+        /* Dynamic Class Layer For Functional Responsive UI */  
+        .nav-links.mobile-active {  
+            display: flex;  
+            flex-direction: column;  
+            position: absolute;  
+            top: 90px;  
+            left: 0;  
+            width: 100%;  
+            background: rgba(3, 8, 18, 0.98);  
+            border-bottom: 1px solid var(--glass-border);  
+            padding: 40px;  
+            gap: 30px;  
+            animation: dropFade 0.4s ease forwards;  
+        }  
+    }  
+
+    @media (max-width: 768px) {  
+        html { font-size: 14px; }  
+        .hero-title { font-size: 3.4rem; }  
+        .features-grid { grid-template-columns: 1fr; }  
+        .section-title { font-size: 2.2rem; }  
+        .cta-header-title { font-size: 2.5rem; }  
+    }  
+
+    @media (max-width: 480px) {  
+        .hero-title { font-size: 2.8rem; }  
+        .hero-action-cluster .btn-neon { width: 100%; }  
+        .why-matrix-grid { grid-template-columns: 1fr; }  
+        .footer-nav-hub { flex-direction: column; gap: 15px; }  
+        .footer-base-ledger { flex-direction: column; gap: 15px; text-align: center; }  
+    }  
+</style>
+
+</head>  
+<body>  <div class="ambient-universe"></div>  
+<div class="dark-matrix-overlay"></div>  
+<div class="plasma-orb orb-1"></div>  
+<div class="plasma-orb orb-2"></div>  
+<canvas class="canvas-particle-layer" id="particleEngineCanvas"></canvas>  
+
+<nav class="nexus-navbar" id="globalNavbar">  
+    <a href="#" class="nav-brand">EcoNexus</a>  
+      
+    <ul class="nav-links" id="navigationLinksMenu">  
+        <li class="nav-item"><a href="#home">Home</a></li>  
+        <li class="nav-item"><a href="#features">Features</a></li>  
+        <li class="nav-item"><a href="#why-nexus">About</a></li>  
+        <li class="nav-item"><a href="#cta-hub">Contact</a></li>  
+    </ul>  
+
+    <div class="nav-actions">  
+        <div class="mobile-hamburger" id="mobileMenuHamburger">  
+            <span></span>  
+            <span></span>  
+            <span></span>  
+        </div>  
+    </div>  
+</nav>  
+
+<section class="hero-apex" id="home">  
+    <div class="hero-layout-grid">  
+        <div class="hero-core-content">  
+            <div class="hero-badge">  
+                <div class="hero-badge-dot"></div>  
+                <span class="hero-badge-text">v4.0 Live Operational Core</span>  
+            </div>  
+            <h1 class="hero-title">EcoNexus</h1>  
+            <h2 class="hero-subtitle">AI Powered Sustainable Packaging Platform</h2>  
+            <p class="hero-paragraph">Transforming eco-friendly manufacturing using Artificial Intelligence, Digital Product Passports and Smart Manufacturing Solutions for MSMEs.</p>  
+              
+            <div class="hero-action-cluster">  
+                <a href="#features" class="btn-neon btn-neon-primary">Explore Features <i class="fa-solid fa-arrow-right"></i></a>  
+                <a href="/register" class="btn-neon btn-neon-secondary">Get Started</a>  
+            </div>  
+        </div>  
+
+        <div class="hero-projection-box">  
+            <div class="holosphere-core">  
+                <div class="holosphere-ring hr-1"></div>  
+                <div class="holosphere-ring hr-2"></div>  
+                <div class="holosphere-ring hr-3"></div>  
+                <i class="fa-solid fa-microchip-ai holosphere-icon"></i>  
+            </div>  
+        </div>  
+    </div>  
+</section>  
+
+<section class="section-features reveal-vector-hidden" id="features">  
+    <div class="section-header">  
+        <span class="section-tagline">Deep Tech Solutions</span>  
+        <h2 class="section-title">Platform <span>Capabilities</span></h2>  
+    </div>  
+
+    <div class="features-grid">  
+        <div class="feature-card glass-panel">  
+            <div class="feature-icon-wrapper">  
+                <i class="fa-solid fa-qrcode"></i>  
+            </div>  
+            <h3 class="feature-card-title">QR Code Digital Product Passport</h3>  
+            <ul class="feature-spec-list">  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Material Composition Analytics</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Micro Temporal Manufacturing Date</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Cryptographic Batch Serialization</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Mechanical Structural Strength Rating</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Bio-Composting Verification Engine</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Dynamic Carbon Footprint Ledger</li>  
+            </ul>  
+            <a href="/product" class="btn-neon btn-neon-secondary">Explore Passport</a>  
+        </div>  
+
+        <div class="feature-card glass-panel">  
+            <div class="feature-icon-wrapper">  
+                <i class="fa-solid fa-cube"></i>  
+            </div>  
+            <h3 class="feature-card-title">AI Custom Packaging Design</h3>  
+            <ul class="feature-spec-list">  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Geometric Product Dimensions Processing</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Dynamic Structural Mass Weight Loading</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Fragility Vulnerability Coefficient Matrix</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Structural Topology Optimizations</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Advanced Sustainable Cost Appraisals</li>  
+                <li class="feature-spec-item"><i class="fa-solid fa-circle-check"></i> Micro Thickness Calibration Matrices</li>  
+            </ul>  
+            <a href="https://econexusai.lovable.app"  
+                target="_blank"  
+                rel="noopener noreferrer"  
+                class="btn-neon btn-neon-primary">  
+                Design Packaging  
+            </a>              
+        </div>  
+    </div>
+</section>  
+
+<section class="section-why reveal-vector-hidden" id="why-nexus">  
+    <div class="section-header">  
+        <span class="section-tagline">Strategic Advantage</span>  
+        <h2 class="section-title">Why Enterprise Chooses <span>EcoNexus</span></h2>  
+    </div>  
+
+    <div class="why-matrix-grid">  
+        <div class="why-node-card glass-panel">  
+            <i class="fa-solid fa-leaf why-node-icon"></i>  
+            <h4 class="why-node-title">Eco Friendly</h4>  
+            <p class="why-node-desc">100% verified circular economy material selection protocols protecting ecosystem lifecycles.</p>  
+        </div>  
+        <div class="why-node-card glass-panel">  
+            <i class="fa-solid fa-brain why-node-icon"></i>  
+            <h4 class="why-node-title">AI Powered</h4>  
+            <p class="why-node-desc">Machine Learning architectures optimization layers minimizing development overheads natively.</p>  
+        </div>  
+        <div class="why-node-card glass-panel">  
+            <i class="fa-solid fa-chart-line-up why-node-icon"></i>  
+            <h4 class="why-node-title">Cost Effective</h4>  
+            <p class="why-node-desc">Algorithmic waste optimization systems lowering manufacturing capital expenditure matrices.</p>  
+        </div>  
+        <div class="why-node-card glass-panel">  
+            <i class="fa-solid fa-seedling why-node-icon"></i>  
+            <h4 class="why-node-title">Carbon Tracking</h4>  
+            <p class="why-node-desc">Cryptographic distributed balance logs ensuring compliant scope emission certification pathways.</p>  
+        </div>  
+    </div>  
+</section>  
+
+<section class="section-workflow reveal-vector-hidden">  
+    <div class="section-header">  
+        <span class="section-tagline">Operational Protocol</span>  
+        <h2 class="section-title">Integration <span>Pipeline</span></h2>  
+    </div>  
+
+    <div class="chrono-pipeline">  
+        <div class="chrono-vector-line"></div>  
+          
+        <div class="chrono-node">  
+            <div class="chrono-marker">01</div>  
+            <div class="chrono-panel glass-panel">  
+                <h4 class="chrono-step-title">Register</h4>  
+                <p class="chrono-step-desc">Establish secure corporate cloud operational domains integrated with hardware APIs.</p>  
+            </div>  
+        </div>  
+
+        <div class="chrono-node">  
+            <div class="chrono-marker">02</div>  
+            <div class="chrono-panel glass-panel">  
+                <h4 class="chrono-step-title">Create Package</h4>  
+                <p class="chrono-step-desc">Ingest industrial parameters, physical mass weight specs, and logistics targets into systems.</p>  
+            </div>  
+        </div>  
+
+        <div class="chrono-node">  
+            <div class="chrono-marker">03</div>  
+            <div class="chrono-panel glass-panel">  
+                <h4 class="chrono-step-title">AI Analysis</h4>  
+                <p class="chrono-step-desc">Machine Learning networks run structural simulations optimizing topology profiles.</p>  
+            </div>  
+        </div>  
+
+        <div class="chrono-node">  
+            <div class="chrono-marker">04</div>  
+            <div class="chrono-panel glass-panel">  
+                <h4 class="chrono-step-title">Track Sustainability</h4>  
+                <p class="chrono-step-desc">Monitor live material chain metrics through distribution channels in real-time.</p>  
+            </div>  
+        </div>  
+    </div>  
+</section>  
+
+<section class="section-cta reveal-vector-hidden" id="cta-hub">  
+    <div class="cta-glowing-vault">  
+        <h2 class="cta-header-title">Ready to Build Sustainable Packaging?</h2>  
+        <p class="cta-paragraph-desc">Empower your industrial production pipelines with AI optimization structures. Lower overhead footprints instantly.</p>  
+        <a href="https://econexusai.lovable.app" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="btn-neon btn-neon-primary">Start Now <i class="fa-solid fa-bolt"></i></a>  
+    </div>  
+</section>  
+
+<footer class="nexus-footer">  
+    <div class="footer-matrix-layout">  
+        <div class="footer-profile-column">  
+            <span class="footer-brand">EcoNexus</span>  
+            <p class="footer-tagline-desc">AI Powered Sustainable Packaging Platform. Transforming global export compliance systems natively through localized machine learning structures.</p>  
+        </div>  
+        <div class="footer-links-column">  
+            <ul class="footer-nav-hub">  
+                <li><a href="#home">Home</a></li>  
+                <li><a href="#features">Features</a></li>  
+                <li><a href="#why-nexus">About</a></li>  
+                <li><a href="#cta-hub">Contact</a></li>  
+            </ul>  
+        </div>  
+    </div>  
+    <div class="footer-base-ledger">  
+        <p class="copyright-text">&copy; 2026 EcoNexus Global Inc. All rights reserved.</p>  
+        <p class="signature-line">Built with <span><i class="fa-solid fa-heart"></i></span> by Sathish</p>  
+    </div>  
+</footer>  
+
+<script>  
+    document.addEventListener("DOMContentLoaded", () => {  
+          
+        /* 1. Global Navigation Scrolled State Modifications */  
+        const globalNavbar = document.getElementById("globalNavbar");  
+        window.addEventListener("scroll", () => {  
+            if (window.scrollY > 50) {  
+                globalNavbar.classList.add("scrolled");  
+            } else {  
+                globalNavbar.classList.remove("scrolled");  
+            }  
+        });  
+
+        /* 2. Responsive Mobile Hamburg Link Navigation Controls */  
+        const mobileMenuHamburger = document.getElementById("mobileMenuHamburger");  
+        const navigationLinksMenu = document.getElementById("navigationLinksMenu");  
+
+        mobileMenuHamburger.addEventListener("click", () => {  
+            navigationLinksMenu.classList.toggle("mobile-active");  
+            // Structural state updates for hamburger vector icons  
+            const bars = mobileMenuHamburger.querySelectorAll("span");  
+            bars.forEach(bar => bar.style.backgroundColor = navigationLinksMenu.classList.contains("mobile-active") ? "var(--primary)" : "var(--white)");  
+        });  
+
+        // Auto Close Menus on Nav Node Triggers  
+        document.querySelectorAll(".nav-links a").forEach(link => {  
+            link.addEventListener("click", () => {  
+                navigationLinksMenu.classList.remove("mobile-active");  
+            });  
+        });  
+
+        /* 3. High-Performance HTML5 Canvas Particulate Fluid Simulation Engine */  
+        const particleEngineCanvas = document.getElementById("particleEngineCanvas");  
+        const ctx = particleEngineCanvas.getContext("2d");  
+          
+        let particleArray = [];  
+        const particleCount = 65;  
+
+        function matchSystemCanvasViewportDimensions() {  
+            particleEngineCanvas.width = window.innerWidth;  
+            particleEngineCanvas.height = window.innerHeight;  
+        }  
+        matchSystemCanvasViewportDimensions();  
+        window.addEventListener("resize", matchSystemCanvasViewportDimensions);  
+
+        class VectorSystemParticle {  
+            constructor() {  
+                this.x = Math.random() * particleEngineCanvas.width;  
+                this.y = Math.random() * particleEngineCanvas.height;  
+                this.radius = Math.random() * 2.5 + 0.5;  
+                this.speedX = Math.random() * 0.4 - 0.2;  
+                this.speedY = Math.random() * -0.6 - 0.1; // Persistent upward vector velocities  
+                this.color = Math.random() > 0.5 ? "rgba(0, 255, 136, 0.3)" : "rgba(0, 217, 255, 0.3)";  
+            }  
+
+            computeDynamicMovementStep() {  
+                this.x += this.speedX;  
+                this.y += this.speedY;  
+
+                // Bound Check Re-instantiations  
+                if (this.y < 0) {  
+                    this.y = particleEngineCanvas.height;  
+                    this.x = Math.random() * particleEngineCanvas.width;  
+                }  
+                if (this.x < 0 || this.x > particleEngineCanvas.width) {  
+                    this.speedX = -this.speedX;  
+                }  
+            }  
+
+            renderPhotonicGraphFrame() {  
+                ctx.beginPath();  
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);  
+                ctx.fillStyle = this.color;  
+                ctx.shadowBlur = 8;  
+                ctx.shadowColor = this.color;  
+                ctx.fill();  
+            }  
+        }  
+
+        function initializeParticleArrayPool() {  
+            particleArray = [];  
+            for(let i = 0; i < particleCount; i++) {  
+                particleArray.push(new VectorSystemParticle());  
+            }  
+        }  
+        initializeParticleArrayPool();  
+
+        function executeCoreParticleRenderLoop() {  
+            ctx.clearRect(0, 0, particleEngineCanvas.width, particleEngineCanvas.height);  
+            ctx.shadowBlur = 0;   
+              
+            for(let i = 0; i < particleArray.length; i++) {  
+                particleArray[i].computeDynamicMovementStep();  
+                particleArray[i].renderPhotonicGraphFrame();  
+            }  
+            requestAnimationFrame(executeCoreParticleRenderLoop);  
+        }  
+        executeCoreParticleRenderLoop();  
+
+        /* 4. Accelerated Intersection Observers for Page Section Reveals */  
+        const revealVectorTargets = document.querySelectorAll(".reveal-vector-hidden");  
+          
+        const layoutObserverOptions = {  
+            root: null,  
+            threshold: 0.12,  
+            margin: "0px"  
+        };  
+
+        const revealStructuralObserver = new IntersectionObserver((entries, observer) => {  
+            entries.forEach(entry => {  
+                if (entry.isIntersecting) {  
+                    entry.target.classList.add("reveal-vector-active");  
+                    observer.unobserve(entry.target);  
+                }  
+            });  
+        }, layoutObserverOptions);  
+
+        revealVectorTargets.forEach(target => revealStructuralObserver.observe(target));  
+    });  
+</script>
+</body>  
 </html>
