@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoNexus | Digital Product Passport</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           EcoNexus Futuristic UI Style Framework Architecture
+           ========================================================================== */
+
+        :root {
+            --bg-dark-overlay: rgba(3, 18, 12, 0.88);
+            --glass-bg: rgba(6, 26, 18, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-hover: rgba(0, 255, 180, 0.25);
+            
+            /* Neon Color Matrix Palette */
+            --clr-emerald: #00ffb7;
+            --clr-light-green: #62ff8a;
+            --clr-cyan: #00d4ff;
+            --clr-blue: #0072ff;
+            --clr-gold: #ffd700;
+            --clr-white: #ffffff;
+            --clr-txt-muted: rgba(216, 249, 243, 0.7);
+            
+            --font-primary: 'Poppins', sans-serif;
+            --font-mono: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: #020805;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            color: var(--clr-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Updated path to point directly inside your static/images framework asset structure */
+            background: linear-gradient(var(--bg-dark-overlay), var(--bg-dark-overlay)), 
+                url('/static/images/background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+
+        /* Base Ambient Lighting Setup */
+        .fixed-bg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: radial-gradient(circle at 10% 20%, rgba(0, 255, 183, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(0, 114, 255, 0.08) 0%, transparent 45%);
+            pointer-events: none;
+        }
+
+        #hero-particle-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           Hero Layout Component
+           ========================================================================== */
+        .hero-section {
+            min-height: 75vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        .logo-wrap {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-logo-fallback {
+            font-size: 3.5rem;
+            color: var(--clr-emerald);
+            z-index: 3;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 183, 0.6));
+            animation: floatingLogo 4s ease-in-out infinite;
+        }
+
+        .logo-glow {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(0,255,183,0.35) 0%, transparent 70%);
+            filter: blur(15px);
+            z-index: 1;
+        }
+
+        .animated-rings span {
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(0, 255, 183, 0.15);
+            border-radius: 50%;
+            animation: ringSpin 8s linear infinite;
+        }
+        .animated-rings span:nth-child(2) {
+            inset: 15px;
+            border-color: rgba(0, 212, 255, 0.2);
+            animation-duration: 12s;
+            animation-direction: reverse;
+        }
+        .animated-rings span:nth-child(3) {
+            inset: 30px;
+            border-color: rgba(255, 255, 255, 0.1);
+            animation-duration: 6s;
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 6vw, 4.2rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            max-width: 900px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--clr-emerald), var(--clr-cyan), var(--clr-light-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            font-family: var(--font-mono);
+            color: var(--clr-txt-muted);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            width: 28px;
+            height: 48px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+        }
+        .mouse-wheel {
+            width: 4px;
+            height: 8px;
+            background-color: var(--clr-emerald);
+            border-radius: 2px;
+            margin: 6px auto 0;
+            animation: scrollWheel 2s ease infinite;
+        }
+
+        /* ==========================================================================
+           Responsive Grid & Glass Architecture
+           ========================================================================== */
+        .passport-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px 80px;
+        }
+
+        .span-full { grid-column: span 2; }
+        .span-half { grid-column: span 1; }
+
+        .passport-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                        border-color 0.4s ease, 
+                        box-shadow 0.4s ease;
+        }
+
+        .passport-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 30px 60px rgba(0, 255, 183, 0.08), 0 0 40px rgba(0, 212, 255, 0.03);
+        }
+
+        .glass-shine {
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            transform: skewX(-25deg);
+            pointer-events: none;
+        }
+        .passport-card:hover .glass-shine {
+            left: 200%;
+            transition: left 1.2s ease-in-out;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .text-center { justify-content: center; text-align: center; }
+        .header-icon { color: var(--clr-emerald); }
+
+        /* ==========================================================================
+           Section Components Code
+           ========================================================================== */
+
+        /* Section 1: Status Grid */
+        .status-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.03);
+            padding: 14px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: relative;
+        }
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: dotPulse 2s infinite;
+        }
+        .pulse-dot.green, .pulse-dot.green::after { background: var(--clr-emerald); box-shadow: 0 0 10px var(--clr-emerald); }
+        .pulse-dot.cyan, .pulse-dot.cyan::after { background: var(--clr-cyan); box-shadow: 0 0 10px var(--clr-cyan); }
+        .pulse-dot.blue, .pulse-dot.blue::after { background: var(--clr-blue); box-shadow: 0 0 10px var(--clr-blue); }
+
+        .badge-txt h4 { font-size: 0.95rem; font-weight: 600; }
+        .badge-txt p { font-size: 0.75rem; color: var(--clr-txt-muted); }
+
+        .score-circle-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .progress-ring-svg { transform: rotate(-90deg); }
+        .ring-bg { fill: transparent; stroke: rgba(255,255,255,0.05); stroke-width: 8; }
+        .ring-fill {
+            fill: transparent;
+            stroke: var(--clr-emerald);
+            stroke-width: 8;
+            stroke-dasharray: 314.15;
+            stroke-dashoffset: 314.15;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .score-val {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .score-val h3 { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; }
+        .score-val p { font-size: 0.7rem; text-transform: uppercase; color: var(--clr-txt-muted); }
+
+        .qr-verify-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .qr-icon { font-size: 2.5rem; color: rgba(255,255,255,0.85); transition: color 0.3s; }
+        .passport-card:hover .qr-icon { color: var(--clr-emerald); }
+        .qr-verify-zone span { font-size: 0.75rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Sections 2 & 2B: Details & Specifications Tables */
+        .details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .detail-row span { color: var(--clr-txt-muted); font-size: 0.95rem; }
+        .detail-row strong { font-weight: 500; font-size: 0.95rem; }
+        .mono-txt { font-family: var(--font-mono); letter-spacing: 0.5px; }
+        .highlight-gold { color: var(--clr-gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+
+        .badge-spec { padding: 4px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+        .green-spec { background: rgba(0,255,183,0.1); color: var(--clr-emerald); }
+        .cyan-spec { background: rgba(0,212,255,0.1); color: var(--clr-cyan); }
+
+        .metric-visual-bar {
+            display: flex;
+            height: 35px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 35px;
+            background: rgba(255,255,255,0.03);
+            padding: 3px;
+        }
+        .visual-segment {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 7px;
+        }
+        .visual-segment.high { background: var(--clr-emerald); color: #020805; }
+        .visual-segment.medium { background: var(--clr-cyan); color: #020805; margin: 0 3px; }
+        .visual-segment.low { background: var(--clr-blue); color: #ffffff; }
+
+        /* Section 3: Material Composition Dynamic Bars */
+        .composition-flex {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .comp-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .comp-item h4 { font-size: 0.9rem; font-weight: 500; color: var(--clr-txt-muted); }
+        .radial-progress-box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        .radial-progress-box svg { transform: rotate(-90deg); }
+        .radial-progress-box .bg { fill: transparent; stroke: rgba(255,255,255,0.04); stroke-width: 6; }
+        .radial-progress-box .fill {
+            fill: transparent;
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 263.89;
+            stroke-dashoffset: 263.89;
+            transition: stroke-dashoffset 2s cubic-bezier(0.1, 1, 0.1, 1);
+        }
+        .radial-progress-box .fill.c1 { stroke: var(--clr-emerald); }
+        .radial-progress-box .fill.c2 { stroke: var(--clr-light-green); }
+        .radial-progress-box .fill.c3 { stroke: var(--clr-cyan); }
+        .radial-progress-box .fill.c4 { stroke: var(--clr-blue); }
+        .radial-progress-box .fill.c5 { stroke: var(--clr-gold); }
+
+        .pct-lbl {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Section 4: Process Pathway Timeline */
+        .timeline-container {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 30px;
+            margin-top: 20px;
+        }
+        .timeline-event {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .timeline-event:hover {
+            background: rgba(0, 255, 183, 0.03);
+            border-color: rgba(0, 255, 183, 0.15);
+        }
+        .step-num {
+            font-family: var(--font-mono);
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .timeline-event h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+        .timeline-event p { font-size: 0.85rem; color: var(--clr-txt-muted); line-height: 1.5; }
+
+        /* Section 5: Optimization Cards */
+        .use-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+        .use-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 18px;
+            padding: 25px 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .use-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.05);
+        }
+        .icon-glow {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        .icon-glow.cyan-g { background: rgba(0,212,255,0.1); color: var(--clr-cyan); box-shadow: 0 0 15px rgba(0,212,255,0.2); }
+        .icon-glow.blue-g { background: rgba(0,114,255,0.1); color: var(--clr-blue); box-shadow: 0 0 15px rgba(0,114,255,0.2); }
+        .icon-glow.emerald-g { background: rgba(0,255,183,0.1); color: var(--clr-emerald); box-shadow: 0 0 15px rgba(0,255,183,0.2); }
+        .icon-glow.gold-g { background: rgba(255,215,0,0.1); color: var(--clr-gold); box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+        .use-card h3 { font-size: 0.9rem; font-weight: 500; }
+
+        /* Section 6: Decomposition Graphic */
+        .decomp-flex {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .tree-graphic-area {
+            flex: 0 0 140px;
+        }
+        .tree-svg {
+            width: 100%;
+            height: auto;
+        }
+        .tree-svg .trunk { stroke: rgba(255,255,255,0.2); stroke-width: 4; }
+        .tree-svg .canopy { fill: rgba(0, 255, 183, 0.1); stroke: var(--clr-emerald); stroke-width: 1.5; }
+        .tree-svg .canopy.glow-c2 { fill: rgba(0, 212, 255, 0.1); stroke: var(--clr-cyan); }
+        .tree-svg .canopy.glow-c3 { fill: rgba(98, 255, 138, 0.1); stroke: var(--clr-light-green); }
+
+        .decomp-stats { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+        .decomp-metric h3 { font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700; line-height: 1.1; }
+        .decomp-metric p { font-size: 0.85rem; color: var(--clr-txt-muted); }
+        .decomp-checklist { list-style: none; margin-top: 5px; }
+        .decomp-checklist li { font-size: 0.9rem; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .text-emerald { color: var(--clr-emerald); }
+
+        /* Section 7: Environmental Impact */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        .counter-box {
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .counter-num { font-family: var(--font-mono); font-size: 2.2rem; font-weight: 700; color: #ffffff; }
+        .counter-box .unit { font-size: 1.2rem; margin-left: 4px; color: var(--clr-emerald); font-weight: 500; }
+        .counter-box p { font-size: 0.85rem; color: var(--clr-txt-muted); margin-top: 4px; }
+
+        /* Section 8: AI Autonomy Dashboard & Custom Radar Matrix */
+        .ai-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+        .ai-metrics-list { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+        .ai-score-hero { margin-bottom: 10px; }
+        .ai-score-hero h3 { font-family: var(--font-mono); font-size: 3rem; font-weight: 800; line-height: 1; }
+        .ai-score-hero p { font-size: 0.85rem; color: var(--clr-txt-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .ai-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; }
+        .ai-row span { color: var(--clr-txt-muted); }
+        .badge-pill { font-size: 0.75rem; text-transform: uppercase; font-family: var(--font-mono); font-weight: 700; padding: 4px 12px; border-radius: 30px; letter-spacing: 0.5px; }
+        .green-pill { background: rgba(0,255,183,0.12); color: var(--clr-emerald); border: 1px solid rgba(0,255,183,0.2); }
+
+        .radar-chart-container { position: relative; width: 220px; height: 220px; flex: 0 0 220px; }
+        .radar-svg { width: 100%; height: 100%; }
+        .radar-web { fill: rgba(255,255,255,0.02); stroke: rgba(255,255,255,0.08); stroke-width: 1; }
+        .inner-web { fill: transparent; stroke: rgba(255,255,255,0.04); }
+        .radar-line { stroke: rgba(255,255,255,0.06); stroke-width: 1; }
+        .radar-data-poly { fill: rgba(0, 212, 255, 0.15); stroke: var(--clr-cyan); stroke-width: 2; transition: all 1.5s ease; }
+        .radar-labels { position: absolute; inset: 0; pointer-events: none; font-size: 0.65rem; text-transform: uppercase; font-family: var(--font-mono); color: var(--clr-txt-muted); }
+        .lbl-pos { position: absolute; transform: translate(-50%, -50%); }
+        .lbl-pos.t { top: 8%; left: 50%; }
+        .lbl-pos.tr { top: 38%; left: 92%; }
+        .lbl-pos.br { top: 86%; left: 78%; }
+        .lbl-pos.bl { top: 86%; left: 22%; }
+        .lbl-pos.tl { top: 38%; left: 8%; }
+
+        /* Section 9: Smooth Review Carousel Slider Component */
+        .review-aggregate { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .stars-gold { color: var(--clr-gold); font-size: 1.1rem; }
+        .review-aggregate h3 { font-family: var(--font-mono); font-size: 1.5rem; }
+        .sub-scale { font-size: 0.9rem; color: var(--clr-txt-muted); font-weight: 400; }
+        .review-slider-window { position: relative; width: 100%; overflow: hidden; height: 130px; }
+        .review-track { display: flex; position: absolute; top: 0; left: 0; width: 400%; height: 100%; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .review-slide { width: 25%; padding-right: 20px; }
+        .slide-stars { color: var(--clr-gold); font-size: 0.8rem; margin-bottom: 8px; }
+        .review-body { font-size: 0.95rem; line-height: 1.5; font-style: italic; color: rgba(255,255,255,0.9); }
+        .reviewer-meta { display: block; font-size: 0.75rem; text-transform: uppercase; font-family: var(--font-mono); color: var(--clr-txt-muted); margin-top: 10px; }
+
+        /* Premium Global Buttons Template UI */
+        .btn {
+            font-family: var(--font-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 15px 24px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.02);
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+        }
+        .btn:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+        .btn:active { transform: translateY(0); }
+
+        /* Section 11: Premium Support Card Architecture */
+        .support-layout { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; }
+        .support-txt h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 6px; }
+        .support-txt p { color: var(--clr-txt-muted); font-size: 0.95rem; }
+
+        .contact-trigger-btn {
+            background: linear-gradient(135deg, var(--clr-emerald), var(--clr-cyan));
+            color: #020805 !important;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            padding: 18px 36px;
+            border-radius: 16px;
+        }
+        .pulse-glow {
+            box-shadow: 0 0 20px rgba(0, 255, 183, 0.3);
+            animation: buttonGlowPulse 2.5s infinite;
+        }
+
+        /* ==========================================================================
+           Footer Component Layout
+           ========================================================================== */
+        .passport-footer {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px 40px;
+        }
+        .footer-line { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); margin-bottom: 35px; }
+        .footer-branding { text-align: center; margin-bottom: 30px; }
+        .footer-branding h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
+        .footer-branding p { font-size: 0.85rem; color: var(--clr-txt-muted); margin-top: 4px; }
+        .footer-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: rgba(216, 249, 243, 0.4); font-family: var(--font-mono); }
+
+        /* ==========================================================================
+           Animation Engine Infrastructure
+           ========================================================================== */
+        .animate-hidden {
+            opacity: 0;
+            transition: opacity 1s cubic-bezier(0.215, 0.610, 0.355, 1), 
+                        transform 1s cubic-bezier(0.215, 0.610, 0.355, 1);
+            will-change: transform, opacity;
+        }
+        .reveal-up { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-40px); }
+        .reveal-right { transform: translateX(40px); }
+        .reveal-scale { transform: scale(0.92); }
+
+        .animate-visible {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        @keyframes floatingLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes ringSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes scrollWheel {
+            0% { opacity: 0; transform: translateY(0); }
+            30% { opacity: 1; }
+            70% { opacity: 0; transform: translateY(14px); }
+            100% { opacity: 0; transform: translateY(0); }
+        }
+        @keyframes dotPulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+        @keyframes buttonGlowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 183, 0.3); }
+            50% { box-shadow: 0 0 35px rgba(0, 212, 255, 0.6); }
+        }
+
+        /* ==========================================================================
+           Media Breakpoint Adjustments (Responsive Core)
+           ========================================================================== */
+        @media(max-width: 1024px) {
+            .passport-grid { grid-template-columns: 1fr; gap: 25px; padding: 0 20px 60px; }
+            .span-half { grid-column: span 2; }
+            .timeline-container { grid-template-columns: repeat(2, 1fr); }
+            .use-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media(max-width: 768px) {
+            .status-grid { justify-content: center; text-align: center; }
+            .score-circle-container { order: -1; width: 100%; display: flex; justify-content: center; }
+            .timeline-container { grid-template-columns: 1fr; }
+            .ai-layout { flex-direction: column; }
+            .radar-chart-container { flex: 0 0 220px; }
+            .decomp-flex { flex-direction: column; text-align: center; }
+            .decomp-checklist li { justify-content: center; }
+            .footer-meta { flex-direction: column; gap: 10px; text-align: center; }
+        }
+
+        @media(max-width: 480px) {
+            .use-grid { grid-template-columns: repeat(2, 1fr); }
+            .counter-grid { grid-template-columns: 1fr; }
+            .passport-card { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Architecture -->
+    <div class="fixed-bg-overlay"></div>
+    <canvas id="hero-particle-canvas"></canvas>
+
+    <!-- Top Hero Section -->
+    <header class="hero-section">
+        <div class="logo-wrap animate-hidden reveal-scale">
+            <div class="logo-glow"></div>
+            <div class="animated-rings">
+                <span></span><span></span><span></span>
+            </div>
+            <!-- Interactive visual substitute for missing static asset logo image -->
+            <div class="main-logo-fallback"><i class="fa-solid fa-cubes-stacked"></i></div>
+        </div>
+        <h1 class="hero-title animate-hidden reveal-up">EcoNexus <span class="gradient-text">Digital Product Passport</span></h1>
+        <p class="hero-subtitle animate-hidden reveal-up">Scan &bull; Verify &bull; Trust &bull; Compost</p>
+        <div class="scroll-indicator">
+            <div class="mouse-wheel"></div>
+        </div>
+    </header>
+
+    <main class="passport-grid">
+
+        <!-- Section 1: Product Status Card -->
+        <section class="passport-card span-full status-card animate-hidden reveal-up">
+            <div class="glass-shine"></div>
+            <div class="status-grid">
+                <div class="status-badge">
+                    <span class="pulse-dot green"></span>
+                    <div class="badge-txt">
+                        <h4>Verified Product</h4>
+                        <p>Authentic Registry</p>
+                    </div>
+                </div>
+                <div class="status-badge">
+                    <span class="pulse-dot cyan"></span>
+                    <div class="badge-txt">
+                        <h4>Digital Passport</h4>
+                        <p>Active & Live</p>
+                    </div>
+                </div>
+                <div class="status-badge">
+                    <span class="pulse-dot blue"></span>
+                    <div class="badge-txt">
+                        <h4>Carbon Neutral</h4>
+                        <p>Certified Lifecycle</p>
+                    </div>
+                </div>
+                <div class="score-circle-container">
+                    <svg class="progress-ring-svg" width="120" height="120">
+                        <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                        <circle class="ring-fill" id="eco-score-ring" cx="60" cy="60" r="50" data-pct="96"/>
+                    </svg>
+                    <div class="score-val">
+                        <h3>96%</h3>
+                        <p>Eco Score</p>
+                    </div>
+                </div>
+                <div class="qr-verify-zone">
+                    <i class="fa-solid fa-qrcode qr-icon"></i>
+                    <span>QR Verified</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Product Details -->
+        <section class="passport-card span-half details-card animate-hidden reveal-left">
+            <h2 class="section-title"><i class="fa-solid fa-circle-info header-icon"></i> Registry Specifications</h2>
+            <div class="details-list">
+                <div class="detail-row"><span>Product Name</span><strong>EcoNexus Protective Packaging Block</strong></div>
+                <div class="detail-row"><span>Product ID</span><strong class="mono-txt">ENX-2026-001548</strong></div>
+                <div class="detail-row"><span>Batch Number</span><strong class="mono-txt">BN-784521</strong></div>
+                <div class="detail-row"><span>Manufactured Date</span>#12 July 2026</strong></div>
+                <div class="detail-row"><span>Expiry Date</span><strong>12 July 2028</strong></div>
+                <div class="detail-row"><span>Compost Before</span><strong class="highlight-gold">December 2028</strong></div>
+                <div class="detail-row"><span>Manufacturer</span><strong>EcoNexus Industries</strong></div>
+                <div class="detail-row"><span>Origin</span><strong>Tamil Nadu, India</strong></div>
+            </div>
+        </section>
+
+        <!-- Section 2 Part B: Metrics & Attributes -->
+        <section class="passport-card span-half metrics-card animate-hidden reveal-right">
+            <h2 class="section-title"><i class="fa-solid fa-sliders header-icon"></i> Physical Characteristics</h2>
+            <div class="details-list">
+                <div class="detail-row"><span>Category</span><strong>Biodegradable Protective Packaging</strong></div>
+                <div class="detail-row"><span>Weight</span><strong>245 g</strong></div>
+                <div class="detail-row"><span>Density</span><strong class="badge-spec green-spec">Lightweight</strong></div>
+                <div class="detail-row"><span>Shock Protection</span><strong class="badge-spec green-spec">High Range</strong></div>
+                <div class="detail-row"><span>Moisture Resistance</span><strong class="badge-spec cyan-spec">Medium Level</strong></div>
+            </div>
+            <div class="metric-visual-bar">
+                <div class="visual-segment high" style="width: 45%;"><span>Shock Perf</span></div>
+                <div class="visual-segment medium" style="width: 35%;"><span>Moisture Perf</span></div>
+                <div class="visual-segment low" style="width: 20%;"><span>Mass Eff</span></div>
+            </div>
+        </section>
+
+        <!-- Section 3: Material Composition -->
+        <section class="passport-card span-full composition-card animate-hidden reveal-up">
+            <h2 class="section-title text-center"><i class="fa-solid fa-leaf header-icon"></i> Bio-Based Material Framework</h2>
+            <div class="composition-flex">
+                <div class="comp-item" data-target="35">
+                    <div class="radial-progress-box">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" class="bg"/><circle cx="50" cy="50" r="42" class="fill c1"/></svg>
+                        <span class="pct-lbl">0%</span>
+                    </div>
+                    <h4>Rice Husk</h4>
+                </div>
+                <div class="comp-item" data-target="25">
+                    <div class="radial-progress-box">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" class="bg"/><circle cx="50" cy="50" r="42" class="fill c2"/></svg>
+                        <span class="pct-lbl">0%</span>
+                    </div>
+                    <h4>Sugarcane Bagasse</h4>
+                </div>
+                <div class="comp-item" data-target="20">
+                    <div class="radial-progress-box">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" class="bg"/><circle cx="50" cy="50" r="42" class="fill c3"/></svg>
+                        <span class="pct-lbl">0%</span>
+                    </div>
+                    <h4>Coconut Coir</h4>
+                </div>
+                <div class="comp-item" data-target="15">
+                    <div class="radial-progress-box">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" class="bg"/><circle cx="50" cy="50" r="42" class="fill c4"/></svg>
+                        <span class="pct-lbl">0%</span>
+                    </div>
+                    <h4>Paddy Straw</h4>
+                </div>
+                <div class="comp-item" data-target="5">
+                    <div class="radial-progress-box">
+                        <svg width="100" height="100"><circle cx="50" cy="50" r="42" class="bg"/><circle cx="50" cy="50" r="42" class="fill c5"/></svg>
+                        <span class="pct-lbl">0%</span>
+                    </div>
+                    <h4>Natural Binder</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: How This Product Was Made -->
+        <section class="passport-card span-full timeline-section animate-hidden reveal-up">
+            <h2 class="section-title text-center"><i class="fa-solid fa-gears header-icon"></i> Circular Fabrication Pathway</h2>
+            <div class="timeline-container">
+                <div class="timeline-event step-card">
+                    <div class="step-num">01</div>
+                    <h3>Waste Collection</h3>
+                    <p>Local agricultural byproduct collection and raw material screening.</p>
+                </div>
+                <div class="timeline-event step-card">
+                    <div class="step-num">02</div>
+                    <h3>Mycelium Infusion</h3>
+                    <p>Inoculation with highly adaptive vegetative mushroom mycelium cultures.</p>
+                </div>
+                <div class="timeline-event step-card">
+                    <div class="step-num">03</div>
+                    <h3>Precision Molding</h3>
+                    <p>Filling functional complex components into modern custom design cavities.</p>
+                </div>
+                <div class="timeline-event step-card">
+                    <div class="step-num">04</div>
+                    <h3>Natural Binding</h3>
+                    <p>Self-binding biological network expansion over a five day growth cycle.</p>
+                </div>
+                <div class="timeline-event step-card">
+                    <div class="step-num">05</div>
+                    <h3>Thermal Drying</h3>
+                    <p>Clean hot air processing to halt development and solidify matrix structural profile.</p>
+                </div>
+                <div class="timeline-event step-card">
+                    <div class="step-num">06</div>
+                    <h3>Deployment Output</h3>
+                    <p>Final high density protective block ready for consumer structural application.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: How To Use -->
+        <section class="passport-card span-full use-section animate-hidden reveal-up">
+            <h2 class="section-title text-center"><i class="fa-solid fa-boxes-packing header-icon"></i> Optimized Deployment Scenarios</h2>
+            <div class="use-grid">
+                <div class="use-card"><div class="icon-glow cyan-g"><i class="fa-solid fa-laptop-code"></i></div><h3>Electronics</h3></div>
+                <div class="use-card"><div class="icon-glow blue-g"><i class="fa-solid fa-wine-glass-crack"></i></div><h3>Glass Items</h3></div>
+                <div class="use-card"><div class="icon-glow emerald-g"><i class="fa-solid fa-box-tissue"></i></div><h3>Fragile Goods</h3></div>
+                <div class="use-card"><div class="icon-glow gold-g"><i class="fa-solid fa-heart-pulse"></i></div><h3>Medical Equipment</h3></div>
+                <div class="use-card"><div class="icon-glow cyan-g"><i class="fa-solid fa-sparkles"></i></div><h3>Cosmetics</h3></div>
+                <div class="use-card"><div class="icon-glow emerald-g"><i class="fa-solid fa-bowl-food"></i></div><h3>Food Packaging</h3></div>
+            </div>
+        </section>
+
+        <!-- Section 6: Decomposition -->
+        <section class="passport-card span-half decomp-card animate-hidden reveal-left">
+            <h2 class="section-title"><i class="fa-solid fa-tree header-icon"></i> Biological Dispersal Vector</h2>
+            <div class="decomp-flex">
+                <div class="tree-graphic-area">
+                    <svg class="tree-svg" viewBox="0 0 200 200">
+                        <path class="trunk" d="M100 180 L100 120 M100 130 L85 110 M100 125 L115 105" stroke-linecap="round"/>
+                        <circle class="canopy glow-c1" cx="100" cy="80" r="35"/>
+                        <circle class="canopy glow-c2" cx="75" cy="95" r="25"/>
+                        <circle class="canopy glow-c3" cx="125" cy="95" r="25"/>
+                    </svg>
+                </div>
+                <div class="decomp-stats">
+                    <div class="decomp-metric">
+                        <h3>100%</h3>
+                        <p>Biodegradable</p>
+                    </div>
+                    <div class="decomp-metric">
+                        <h3 class="highlight-gold">45-90 Days</h3>
+                        <p>Natural Compost Window</p>
+                    </div>
+                    <ul class="decomp-checklist">
+                        <li><i class="fa-solid fa-circle-check text-emerald"></i> Leaves zero plastic waste</li>
+                        <li><i class="fa-solid fa-circle-check text-emerald"></i> No industrial microplastics generated</li>
+                        <li><i class="fa-solid fa-circle-check text-emerald"></i> Verified non-toxic to soil flora</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Environmental Impact -->
+        <section class="passport-card span-half impact-card animate-hidden reveal-right">
+            <h2 class="section-title"><i class="fa-solid fa-earth-americas header-icon"></i> Lifecycle Analytics</h2>
+            <div class="counter-grid">
+                <div class="counter-box">
+                    <span class="counter-num" data-val="2.8" data-dec="1">0.0</span><span class="unit">kg</span>
+                    <p>Plastic Displaced</p>
+                </div>
+                <div class="counter-box">
+                    <span class="counter-num" data-val="5.7" data-dec="1">0.0</span><span class="unit">kg</span>
+                    <p>CO₂ Net Abatement</p>
+                </div>
+                <div class="counter-box">
+                    <span class="counter-num" data-val="1.2" data-dec="1">0.0</span><span class="unit"></span>
+                    <p>Forest Trees Protected</p>
+                </div>
+                <div class="counter-box">
+                    <span class="counter-num" data-val="94" data-dec="0">0</span><span class="unit">%</span>
+                    <p>Volumetric Waste Reduced</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: AI Quality Analysis Dashboard -->
+        <section class="passport-card span-full ai-dashboard animate-hidden reveal-up">
+            <h2 class="section-title"><i class="fa-solid fa-brain header-icon"></i> AI Autonomous Diagnostics</h2>
+            <div class="ai-layout">
+                <div class="ai-metrics-list">
+                    <div class="ai-score-hero">
+                        <h3 class="gradient-text">98%</h3>
+                        <p>AI Quality Integrity Score</p>
+                    </div>
+                    <div class="ai-row"><span>Compression Threshold</span><strong class="text-emerald">Excellent Range</strong></div>
+                    <div class="ai-row"><span>Shock Load Structural Verification</span><strong class="badge-pill green-pill">Passed</strong></div>
+                    <div class="ai-row"><span>Atmospheric Humidity Resilience</span><strong class="badge-pill green-pill">Passed</strong></div>
+                    <div class="ai-row"><span>Accelerated Biodegradable Bio-Assay</span><strong class="badge-pill green-pill">Passed</strong></div>
+                </div>
+                <div class="radar-chart-container">
+                    <svg class="radar-svg" viewBox="0 0 200 200">
+                        <!-- Polygon Chart Underlay -->
+                        <polygon class="radar-web" points="100,20 176,75 147,165 53,165 24,75"/>
+                        <polygon class="radar-web inner-web" points="100,60 138,87 123,132 76,132 62,87"/>
+                        <!-- Chart Center Lines -->
+                        <line x1="100" y1="100" x2="100" y2="20" class="radar-line"/>
+                        <line x1="100" y1="100" x2="176" y2="75" class="radar-line"/>
+                        <line x1="100" y1="100" x2="147" y2="165" class="radar-line"/>
+                        <line x1="100" y1="100" x2="53" y2="165" class="radar-line"/>
+                        <line x1="100" y1="100" x2="24" y2="75" class="radar-line"/>
+                        <!-- Actual Plot Data -->
+                        <polygon class="radar-data-poly" id="radar-data" points="100,30 168,80 142,155 60,150 35,80"/>
+                    </svg>
+                    <div class="radar-labels">
+                        <span class="lbl-pos t">Shock</span>
+                        <span class="lbl-pos tr">Moisture</span>
+                        <span class="lbl-pos br">Density</span>
+                        <span class="lbl-pos bl">Compost</span>
+                        <span class="lbl-pos tl">Flex</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: Customer Reviews Slider (Expanded to span-full for structural balance) -->
+        <section class="passport-card span-full review-section animate-hidden reveal-left">
+            <h2 class="section-title"><i class="fa-solid fa-comments header-icon"></i> Ecosystem Validation</h2>
+            <div class="review-aggregate">
+                <span class="stars-gold"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+                <h3>4.8 <span class="sub-scale">/ 5.0</span></h3>
+            </div>
+            <div class="review-slider-window">
+                <div class="review-track" id="reviewTrack">
+                    <div class="review-slide">
+                        <div class="slide-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                        <p class="review-body">"Excellent packaging properties. Displaced all our expandible polystyrene logistics instantly across production frameworks."</p>
+                        <span class="reviewer-meta">&mdash; Global Enterprise Logistics Lead</span>
+                    </div>
+                    <div class="review-slide">
+                        <div class="slide-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                        <p class="review-body">"Very lightweight, structural parameters held up against high-impact multi-axis dropped weight tests."</p>
+                        <span class="reviewer-meta">&mdash; Hardware QA Engineer</span>
+                    </div>
+                    <div class="review-slide">
+                        <div class="slide-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+                        <p class="review-body">"Eco friendly implementation that actually works out of the box without changing internal distribution dimensions."</p>
+                        <span class="reviewer-meta">&mdash; Operations Director</span>
+                    </div>
+                    <div class="review-slide">
+                        <div class="slide-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                        <p class="review-body">"Highly recommended framework architecture for modern forward-looking consumer brands globally."</p>
+                        <span class="reviewer-meta">&mdash; Sustainable Product Designer</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 11: Support Module -->
+        <section class="passport-card span-full support-card animate-hidden reveal-up">
+            <div class="support-layout">
+                <div class="support-txt">
+                    <h2>Got queries regarding this asset batch?</h2>
+                    <p>Connect immediately with our structural integrity engineers for instant documentation access.</p>
+                </div>
+                <button class="btn contact-trigger-btn pulse-glow" id="contactBtn">
+                    <span class="btn-content"><i class="fa-solid fa-paper-plane"></i> Contact Support</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Unified Animated Footer Architecture -->
+    <footer class="passport-footer">
+        <div class="footer-line"></div>
+        <div class="footer-branding">
+            <h2>Eco<span class="text-emerald">Nexus</span></h2>
+            <p>AI Powered Sustainable Packaging Platform</p>
+        </div>
+        <div class="footer-meta">
+            <span>Digital Product Passport System v4.02</span>
+            <span>&copy; 2026 EcoNexus Industries. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <!-- Client-Side Engine Application Execution -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize Subsystems
+            initParticleEngine();
+            initIntersectionObservers();
+            initReviewSlider();
+            initButtonRipples();
+            initSupportMailer();
+        });
+
+        /* ==========================================================================
+           1. Interactive Micro-Particle Field
+           ========================================================================== */
+        function initParticleEngine() {
+            const canvas = document.getElementById("hero-particle-canvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            
+            let w, h;
+            const particles = [];
+            const particleCount = 75; 
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            
+            window.addEventListener("resize", resize);
+            resize();
+
+            class CosmicParticle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.speedY = (Math.random() - 0.5) * 0.3;
+                    this.alpha = Math.random() * 0.6 + 0.1;
+                    this.fadeSpeed = 0.002 + Math.random() * 0.003;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.alpha -= this.fadeSpeed;
+
+                    if (this.alpha <= 0 || this.x < 0 || this.x > w || this.y < 0 || this.y > h) {
+                        this.reset();
+                    }
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = "#00ffb7";
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = "#00ffb7";
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new CosmicParticle());
+            }
+
+            function renderLoop() {
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(renderLoop);
+            }
+            renderLoop();
+        }
+
+        /* ==========================================================================
+           2. Intersection Observer Sequential Trigger Engine
+           ========================================================================== */
+        function initIntersectionObservers() {
+            const elementsToAnimate = document.querySelectorAll(".animate-hidden");
+            
+            const generalOptions = {
+                root: null,
+                threshold: 0.12,
+                rootMargin: "0px 0px -40px 0px"
+            };
+
+            const coreObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("animate-visible");
+                        
+                        // Secondary activation checks inside target element container boundaries
+                        if (entry.target.classList.contains("status-card")) {
+                            animateEcoScoreRing();
+                        }
+                        if (entry.target.classList.contains("composition-card")) {
+                            animateMaterialComposition();
+                        }
+                        if (entry.target.classList.contains("impact-card")) {
+                            animateImpactCounters(entry.target);
+                        }
+                        if (entry.target.classList.contains("timeline-section")) {
+                            animateTimelineSequence(entry.target);
+                        }
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, generalOptions);
+
+            elementsToAnimate.forEach(el => coreObserver.observe(el));
+        }
+
+        /* ==========================================================================
+           3. Specialized Custom Visualizations (SVGs, Bars, Numerical Data)
+           ========================================================================== */
+        function animateEcoScoreRing() {
+            const ring = document.getElementById("eco-score-ring");
+            if (!ring) return;
+            const targetPct = parseInt(ring.getAttribute("data-pct"), 10);
+            const radius = ring.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            
+            const offset = circumference - (targetPct / 100) * circumference;
+            ring.style.strokeDashoffset = offset;
+        }
+
+        function animateMaterialComposition() {
+            const compItems = document.querySelectorAll(".comp-item");
+            compItems.forEach(item => {
+                const targetVal = parseInt(item.getAttribute("data-target"), 10);
+                const fillCircle = item.querySelector(".fill");
+                const lbl = item.querySelector(".pct-lbl");
+                
+                if (!fillCircle) return;
+                
+                const perimeter = 2 * Math.PI * 42;
+                const offset = perimeter - (targetVal / 100) * perimeter;
+                fillCircle.style.strokeDashoffset = offset;
+                
+                // Smooth Counter Interpolation Loop
+                let current = 0;
+                const duration = 1500;
+                const frameTime = 1000 / 60;
+                const steps = duration / frameTime;
+                const increment = targetVal / steps;
+
+                const countFn = () => {
+                    current += increment;
+                    if (current >= targetVal) {
+                        lbl.textContent = `${targetVal}%`;
+                    } else {
+                        lbl.textContent = `${Math.floor(current)}%`;
+                        requestAnimationFrame(countFn);
+                    }
+                };
+                countFn();
+            });
+        }
+
+        function animateTimelineSequence(parentCard) {
+            const steps = parentCard.querySelectorAll(".step-card");
+            steps.forEach((step, idx) => {
+                step.style.opacity = "0";
+                step.style.transform = "translateY(20px)";
+                step.style.transition = "all 0.6s cubic-bezier(0.215, 0.610, 0.355, 1)";
+                
+                setTimeout(() => {
+                    step.style.opacity = "1";
+                    step.style.transform = "translateY(0)";
+                }, idx * 200); 
+            });
+        }
+
+        function animateImpactCounters(parentCard) {
+            const counters = parentCard.querySelectorAll(".counter-num");
+            counters.forEach(counter => {
+                const target = parseFloat(counter.getAttribute("data-val"));
+                const decimals = parseInt(counter.getAttribute("data-dec"), 10);
+                
+                let start = 0;
+                const duration = 1800; 
+                const startTime = performance.now();
+
+                function updateCounter(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const easeProgress = progress * (2 - progress);
+                    const currentVal = start + easeProgress * (target - start);
+                    
+                    counter.textContent = currentVal.toFixed(decimals);
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target.toFixed(decimals);
+                    }
+                }
+                requestAnimationFrame(updateCounter);
+            });
+        }
+
+        /* ==========================================================================
+           4. Infinite Carousel Review Slider Matrix
+           ========================================================================== */
+        function initReviewSlider() {
+            const track = document.getElementById("reviewTrack");
+            if (!track) return;
+            const slides = track.querySelectorAll(".review-slide");
+            let currentIdx = 0;
+            
+            setInterval(() => {
+                currentIdx = (currentIdx + 1) % slides.length;
+                track.style.transform = `translateX(-${currentIdx * 25}%)`;
+            }, 4500); 
+        }
+
+        /* ==========================================================================
+           5. Interactive Button Ripple System Injection
+           ========================================================================== */
+        function initButtonRipples() {
+            const rippleButtons = document.querySelectorAll(".btn, .contact-trigger-btn");
+            
+            rippleButtons.forEach(btn => {
+                btn.addEventListener("click", function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const rippleCircle = document.createElement("span");
+                    rippleCircle.style.position = "absolute";
+                    rippleCircle.style.width = rippleCircle.style.height = "100px";
+                    rippleCircle.style.background = "rgba(255, 255, 255, 0.25)";
+                    rippleCircle.style.borderRadius = "50%";
+                    rippleCircle.style.pointerEvents = "none";
+                    rippleCircle.style.left = `${x - 50}px`;
+                    rippleCircle.style.top = `${y - 50}px`;
+                    rippleCircle.style.transform = "scale(0)";
+                    rippleCircle.style.transition = "transform 0.5s ease-out, opacity 0.5s";
+                    rippleCircle.style.opacity = "1";
+                    
+                    this.appendChild(rippleCircle);
+                    
+                    requestAnimationFrame(() => {
+                        rippleCircle.style.transform = "scale(4)";
+                        rippleCircle.style.opacity = "0";
+                    });
+                    
+                    setTimeout(() => { rippleCircle.remove(); }, 600);
+                });
+            });
+        }
+
+        /* ==========================================================================
+           6. Automated Platform Mailer Handshake Integration
+           ========================================================================== */
+        function initSupportMailer() {
+            const contactBtn = document.getElementById("contactBtn");
+            if (!contactBtn) return;
+            
+            contactBtn.addEventListener("click", () => {
+                const mailTarget = "mailto:sahayasathish60@gmail.com";
+                const mailSubject = encodeURIComponent("EcoNexus Support");
+                const mailBody = encodeURIComponent("Hello EcoNexus Team,\n\nI need support regarding product batch tracking reference identifier asset ENX-2026-001548...");
+                
+                setTimeout(() => {
+                    window.location.href = `${mailTarget}?subject=${mailSubject}&body=${mailBody}`;
+                }, 250); 
+            });
+        }
+    </script>
+</body>
+</html>

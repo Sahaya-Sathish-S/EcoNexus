@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoNexus | Loading</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+                EcoNexus Global Styles
+        ===========================================*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background-color: #030d0a;
+        }
+
+        body {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
+                url("{{ url_for('static', filename='images/background.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        /* ===========================================
+                Background & Decorative FX
+        ===========================================*/
+        .background-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at top left, rgba(0, 255, 170, 0.12), transparent 45%),
+                radial-gradient(circle at bottom right, rgba(230, 255, 0, 0.08), transparent 45%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: .4;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Ambient Glows */
+        .ambient-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(180px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .left-glow {
+            background: #00ffb7;
+            left: -150px;
+            top: 20%;
+            animation: glowFloatY 10s ease-in-out infinite alternate;
+        }
+        .right-glow {
+            background: #d4ff00;
+            right: -150px;
+            bottom: 10%;
+            animation: glowFloatY 12s ease-in-out infinite alternate-reverse;
+        }
+
+        /* ===========================================
+                Main Content (App Title Area)
+        ===========================================*/
+        .brand-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-center: center;
+            z-index: 5;
+            animation: contentAppear 1.5s ease;
+        }
+
+        .company-name {
+            font-size: clamp(3.5rem, 8vw, 5.5rem);
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            animation: titlePulseGlow 4s ease-in-out infinite;
+        }
+
+        /* Eco-Friendly Bio-luminescent Gradients */
+        .company-name span.eco {
+            color: #00ffb7;
+            background: linear-gradient(135deg, #00ff88, #00ffc8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .company-name span.nexus {
+            color: #ccff00;
+            background: linear-gradient(135deg, #a6ff00, #e1ff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            color: rgba(216, 249, 243, 0.75);
+            font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+            letter-spacing: 2px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* ===========================================
+                Bottom Progress Framework
+        ===========================================*/
+        .progress-container {
+            width: 100%;
+            max-width: 480px;
+            z-index: 5;
+            margin-top: auto;
+            animation: footerFadeUp 1.8s ease;
+        }
+
+        .status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 12px #00ff88;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        #loadingText {
+            font-weight: 400;
+            transition: opacity 0.3s ease;
+        }
+
+        #percentage {
+            margin-left: auto;
+            font-weight: 600;
+            color: #ccff00;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 6px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #00ff88, #88ff00, #00ffc8, #00ff88);
+            background-size: 300%;
+            box-shadow: 0 0 15px rgba(0, 255, 180, 0.4);
+            animation: gradientShift 3s linear infinite;
+            transition: width 0.15s cubic-bezier(0.1, 0.8, 0.25, 1);
+        }
+
+        /* ===========================================
+                Keyframe Animations
+        ===========================================*/
+        @keyframes gridMove {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(60px) translateX(60px); }
+        }
+
+        @keyframes glowFloatY {
+            0% { transform: translateY(0) scale(1); opacity: 0.12; }
+            100% { transform: translateY(-40px) scale(1.1); opacity: 0.22; }
+        }
+
+        @keyframes titlePulseGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 20px rgba(0, 255, 136, 0.25),
+                    0 0 40px rgba(204, 255, 0, 0.15);
+            }
+            50% {
+                text-shadow: 
+                    0 0 35px rgba(0, 255, 136, 0.55),
+                    0 0 60px rgba(204, 255, 0, 0.4),
+                    0 0 90px rgba(0, 255, 136, 0.2);
+            }
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+        }
+
+        @keyframes gradientShift {
+            from { background-position: 0%; }
+            to { background-position: 300%; }
+        }
+
+        @keyframes contentAppear {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes footerFadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+    <div class="grid"></div>
+    <div class="ambient-glow left-glow"></div>
+    <div class="ambient-glow right-glow"></div>
+
+    <!-- Main App Title Section -->
+    <main class="brand-container">
+        <h1 class="company-name"><span class="eco">Eco</span><span class="nexus">Nexus</span></h1>
+        <p class="tagline">Intelligent Sustainable Packaging Platform</p>
+    </main>
+
+    <!-- Bottom Embedded Progress Bar -->
+    <section class="progress-container">
+        <div class="status-wrapper">
+            <div class="status-dot"></div>
+            <span id="loadingText">Initializing EcoNexus Platform...</span>
+            <span id="percentage">0%</span>
+        </div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+    </section>
+
+    <!-- Interactive Organic Particle Engine JS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            /* ===========================================
+                    1. Loading Engine & State Changes
+            ===========================================*/
+            const progressFill = document.getElementById("progressFill");
+            const percentage = document.getElementById("percentage");
+            const loadingText = document.getElementById("loadingText");
+
+            let progress = 0;
+            const loadingMessages = [
+                "Initializing EcoNexus Engine...",
+                "Analyzing Carbon Profiles...",
+                "Optimizing Bio-polymer Formulations...",
+                "Restructuring Supply Configurations...",
+                "Assembling Sustainable Materials Engine...",
+                "Running Lifecycle Formulations...",
+                "Verifying Circular Loop Architecture...",
+                "Synchronizing Secure Environment...",
+                "Compiling Interface Configurations...",
+                "Launching EcoNexus..."
+            ];
+
+            let currentMessageIndex = 0;
+
+            const loaderInterval = setInterval(() => {
+                // Natural step pacing
+                progress += Math.random() * 3.5;
+
+                if (progress > 100) progress = 100;
+
+                progressFill.style.width = `${progress}%`;
+                percentage.textContent = `${Math.floor(progress)}%`;
+
+                // Calculate messaging state changes smoothly
+                if (currentMessageIndex < loadingMessages.length - 1 && progress >= (currentMessageIndex + 1) * 10) {
+                    currentMessageIndex++;
+                    loadingText.style.opacity = "0";
+
+                    setTimeout(() => {
+                        loadingText.textContent = loadingMessages[currentMessageIndex];
+                        loadingText.style.opacity = "1";
+                    }, 200);
+                }
+
+                // Completion Transition State
+                if (progress >= 100) {
+                    clearInterval(loaderInterval);
+                    loadingText.textContent = "System Ready";
+                    
+                    setTimeout(() => {
+                        document.body.style.opacity = "0";
+                        document.body.style.transition = "opacity 0.8s ease";
+                    }, 500);
+
+                    setTimeout(() => {
+                        window.location.href = "/home";
+                    }, 1300);
+                }
+            }, 90);
+
+            /* ===========================================
+                    2. Canvas Bioluminescent Particle System
+            ===========================================*/
+            const canvas = document.createElement("canvas");
+            canvas.style.position = "fixed";
+            canvas.style.inset = "0";
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+            canvas.style.pointerEvents = "none";
+            canvas.style.zIndex = "1";
+            document.body.prepend(canvas);
+
+            const ctx = canvas.getContext("2d");
+            let w, h;
+            const particles = [];
+            const maxParticles = 140; // Balanced performance threshold
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            // Capture subtle mouse coordinates
+            const mouse = { x: null, y: null };
+            window.addEventListener("mousemove", (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            window.addEventListener("mouseleave", () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            class Particle {
+                constructor() {
+                    this.init();
+                }
+                init() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.radius = Math.random() * 2 + 0.8;
+                    this.vx = (Math.random() - 0.5) * 0.4;
+                    this.vy = (Math.random() - 0.5) * 0.4;
+                    this.alpha = Math.random() * 0.5 + 0.2;
+                    this.fade = (Math.random() * 0.003) + 0.002;
+                    
+                    const colors = ["#00ffb7", "#ccff00", "#5effa3", "#ffffff"];
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.alpha += this.fade;
+
+                    if (this.alpha >= 0.85 || this.alpha <= 0.15) {
+                        this.fade *= -1;
+                    }
+
+                    // Soft Edge screen wrapping
+                    if (this.x < -10) this.x = w + 10;
+                    if (this.x > w + 10) this.x = -10;
+                    if (this.x < -10) this.y = h + 10;
+                    if (this.y > h + 10) this.y = -10;
+
+                    // Subtle interactive magnetic pull
+                    if (mouse.x !== null && mouse.y !== null) {
+                        const dx = mouse.x - this.x;
+                        const dy = mouse.y - this.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 130) {
+                            this.x -= dx * 0.002;
+                            this.y -= dy * 0.002;
+                        }
+                    }
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.shadowColor = this.color;
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push(new Particle());
+            }
+
+            function drawNeuralNetwork() {
+                for (let i = 0; i < maxParticles; i++) {
+                    for (let j = i + 1; j < maxParticles; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 110) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            // Clean dynamic alpha calculation
+                            const opacity = (1 - (dist / 110)) * 0.12;
+                            ctx.strokeStyle = `rgba(0, 255, 183, ${opacity})`;
+                            ctx.lineWidth = 0.7;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                drawNeuralNetwork();
+                requestAnimationFrame(loop);
+            }
+            loop();
+        });
+    </script>
+</body>
+</html>
